@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="A-Z Jewelry & Swap Shop — Peoria's neighborhood pawn, jewelry and resale store. Shop pre-owned goods, start a pawn inquiry, or explore auctions." />
+  <title>A-Z Jewelry & Swap Shop | Peoria, Illinois</title>
+  <link rel="preconnect" href="https://images.unsplash.com" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="demo-banner">DEMONSTRATION STOREFRONT — sample inventory, bids and checkout are not live.</div>
+  <header class="site-header">
+    <div class="header-main">
+      <a class="brand" href="#top" aria-label="A-Z Jewelry & Swap Shop home">
+        <span class="brand-mark">A–Z</span>
+        <span><strong>Jewelry & Swap Shop</strong><small>Peoria, Illinois</small></span>
+      </a>
+      <form class="search" id="searchForm">
+        <input id="searchInput" aria-label="Search inventory" placeholder="Search jewelry, tools, electronics, collectibles..." />
+        <button type="submit">Search</button>
+      </form>
+      <div class="header-actions">
+        <a href="#sell">Sell / Pawn</a>
+        <button class="cart-button" id="cartButton">Cart <span id="cartCount">0</span></button>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="#shop">Shop</a><a href="#auctions">Auctions</a><a href="#sell">Sell to A-Z</a>
+      <a href="#pawn">Pawn & Loans</a><a href="#services">Services</a><a href="#contact">Visit Us</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">Peoria's neighborhood resale marketplace</span>
+        <h1>Good stuff. Fair deals. One store from A to Z.</h1>
+        <p>Shop quality pre-owned merchandise, discover one-of-a-kind finds, or start a conversation about selling or pawning an item.</p>
+        <div class="hero-actions"><a class="btn primary" href="#shop">Shop inventory</a><a class="btn secondary" href="#sell">Sell an item</a></div>
+        <div class="trust-row"><span>✓ Local pickup</span><span>✓ Shipping on eligible items</span><span>✓ In-store inspection</span></div>
+      </div>
+      <div class="hero-media">
+        <img src="https://images.unsplash.com/photo-1601598851547-4302969d0614?auto=format&fit=crop&w=1200&q=85" alt="Vintage watches and jewelry display" />
+        <div class="hero-card"><strong>Fresh finds daily</strong><span>Jewelry • electronics • tools • collectibles</span></div>
+      </div>
+    </section>
+
+    <section class="category-strip" aria-label="Shop categories">
+      <button data-category="Jewelry">💎<span>Jewelry</span></button>
+      <button data-category="Electronics">💻<span>Electronics</span></button>
+      <button data-category="Tools">🛠️<span>Tools</span></button>
+      <button data-category="Gaming">🎮<span>Gaming</span></button>
+      <button data-category="Music">🎸<span>Music</span></button>
+      <button data-category="Collectibles">🏆<span>Collectibles</span></button>
+    </section>
+
+    <section class="section" id="shop">
+      <div class="section-heading">
+        <div><span class="eyebrow">Online store</span><h2>Shop current inventory</h2></div>
+        <div class="shop-tools">
+          <select id="categoryFilter" aria-label="Filter by category"><option value="All">All categories</option></select>
+          <select id="sortFilter" aria-label="Sort products"><option value="featured">Featured</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option></select>
+        </div>
+      </div>
+      <div class="product-grid" id="productGrid"></div>
+    </section>
+
+    <section class="section dark-section" id="auctions">
+      <div class="section-heading light">
+        <div><span class="eyebrow">A-Z Auction Block</span><h2>Bid on unique finds</h2><p>Timed demo auctions for aged inventory, collectibles and special pieces.</p></div>
+        <a class="btn outline" href="#auctions">View all auctions</a>
+      </div>
+      <div class="auction-grid" id="auctionGrid"></div>
+    </section>
+
+    <section class="split-section" id="sell">
+      <div class="split-copy">
+        <span class="eyebrow">Turn stuff into opportunity</span><h2>Want to sell something to A-Z?</h2>
+        <p>Send us the basics before you make the trip. Upload photos, tell us what you have, and our staff can let you know whether it is something we want to inspect in person.</p>
+        <ul><li>Photo-first intake</li><li>Optional video conversation</li><li>Large-item pickup requests</li><li>No obligation</li></ul>
+      </div>
+      <form class="intake-card" id="sellForm">
+        <h3>Start a sell inquiry</h3>
+        <label>Name<input required name="name" placeholder="Your name" /></label>
+        <label>Phone<input required name="phone" placeholder="(309) 555-0123" /></label>
+        <label>What are you selling?<input required name="item" placeholder="Example: DeWalt drill set" /></label>
+        <label>Estimated condition<select name="condition"><option>Excellent</option><option>Good</option><option>Fair</option><option>Needs testing</option></select></label>
+        <label>Photos<input name="photos" type="file" accept="image/*" multiple /></label>
+        <label>Notes<textarea name="notes" rows="3" placeholder="Model number, accessories, known issues..."></textarea></label>
+        <button class="btn primary full" type="submit">Send inquiry</button>
+        <small>Demo only. Final acceptance and value require staff review and, when appropriate, in-person inspection.</small>
+      </form>
+    </section>
+
+    <section class="section soft" id="pawn">
+      <div class="section-heading"><div><span class="eyebrow">Pawn & short-term collateral loans</span><h2>Start the conversation online</h2></div></div>
+      <div class="feature-grid">
+        <article><span>1</span><h3>Tell us what you have</h3><p>Submit photos and basic item details from your phone.</p></article>
+        <article><span>2</span><h3>Talk with the shop</h3><p>Staff may request more photos, a video conversation, or an in-store inspection.</p></article>
+        <article><span>3</span><h3>Complete it in person</h3><p>Any regulated pawn transaction is completed only through the shop's approved process.</p></article>
+      </div>
+      <div class="center-actions"><button class="btn primary" id="pawnInquiryBtn">Start pawn inquiry</button><button class="btn secondary" id="videoBtn">Request video call</button></div>
+    </section>
+
+    <section class="section" id="services">
+      <div class="section-heading"><div><span class="eyebrow">More ways to do business</span><h2>Built for how customers shop now</h2></div></div>
+      <div class="service-grid">
+        <article><h3>Jewelry & precious metals</h3><p>Browse rings, watches, chains and estate pieces. Ask about evaluations in store.</p></article>
+        <article><h3>Electronics & gaming</h3><p>Shop tested pre-owned devices, consoles, computers and accessories.</p></article>
+        <article><h3>Tools & equipment</h3><p>Power tools, shop equipment and work gear with condition notes.</p></article>
+        <article><h3>Large-item pickup</h3><p>Have heavy equipment or oversized merchandise? Request a pickup review before hauling it in.</p></article>
+      </div>
+    </section>
+
+    <section class="history-band">
+      <div><span class="eyebrow">Local, independent, established</span><h2>A Peoria shop with decades of history — now built for the next generation of customers.</h2></div>
+      <a class="btn light-btn" href="#contact">Plan a visit</a>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="contact-grid">
+        <div><span class="eyebrow">Visit A-Z</span><h2>414 SW Adams St, Peoria</h2><p>Questions about an item? Call <a href="tel:+13096374531">(309) 637-4531</a>.</p>
+          <div class="hours"><div><span>Mon–Fri</span><strong>9:00 AM – 5:00 PM</strong></div><div><span>Saturday</span><strong>9:00 AM – 3:00 PM</strong></div><div><span>Sunday</span><strong>Closed</strong></div></div>
+          <div class="hero-actions"><a class="btn primary" href="https://www.google.com/maps/search/?api=1&query=414+SW+Adams+St+Peoria+IL+61602" target="_blank" rel="noreferrer">Get directions</a><a class="btn secondary" href="tel:+13096374531">Call store</a></div>
+        </div>
+        <div class="map-card"><div class="map-pin">A–Z</div><p>Downtown Peoria<br />414 SW Adams St<br />Peoria, IL 61602</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="brand footer-brand"><span class="brand-mark">A–Z</span><span><strong>Jewelry & Swap Shop</strong><small>Peoria, Illinois</small></span></div><p>Pawn • Jewelry • Resale • Auctions</p><p class="legal">Demonstration site prepared for presentation. Product images, inventory, prices, auction data and checkout are sample content until connected to live store systems.</p></footer>
+
+  <aside class="cart-drawer" id="cartDrawer" aria-hidden="true"><div class="drawer-head"><h3>Your cart</h3><button id="closeCart">×</button></div><div id="cartItems"></div><div class="cart-total"><span>Total</span><strong id="cartTotal">$0.00</strong></div><button class="btn primary full" id="checkoutBtn">Demo checkout</button></aside>
+  <div class="overlay" id="overlay"></div>
+
+  <button class="ai-button" id="aiButton">Ask A-Z</button>
+  <section class="chat-panel" id="chatPanel"><div class="chat-head"><div><strong>A-Z Digital Assistant</strong><small>Demo customer service</small></div><button id="closeChat">×</button></div><div class="chat-log" id="chatLog"><div class="bot">Hi. I can help you find items, explain the sell/pawn process, or give store information.</div></div><form id="chatForm"><input id="chatInput" placeholder="Ask about inventory..." /><button>Send</button></form></section>
+
+  <div class="modal" id="modal"><div class="modal-card"><button class="modal-close" id="modalClose">×</button><div id="modalContent"></div></div></div>
+  <div class="toast" id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
