@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>A-Z Owner Command Center</title>
+  <link rel="stylesheet" href="owner.css" />
+</head>
+<body>
+  <div class="demo">DEMO OWNER COMMAND CENTER — sample data only</div>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand"><div class="mark">A–Z</div><div><strong>Owner Command Center</strong><span>Digital Operations</span></div></div>
+      <nav>
+        <button class="nav active" data-tab="overview">Overview</button>
+        <button class="nav" data-tab="orders">Orders</button>
+        <button class="nav" data-tab="inquiries">Sell / Pawn Inquiries</button>
+        <button class="nav" data-tab="meetings">Video Meetings</button>
+        <button class="nav" data-tab="inventory">Inventory</button>
+        <button class="nav" data-tab="auctions">Auctions</button>
+      </nav>
+      <a class="store-link" href="index.html">← Back to storefront</a>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div><span class="eyebrow">A-Z Jewelry & Swap Shop</span><h1 id="pageTitle">Overview</h1></div>
+        <div class="top-actions"><button id="quickMeet">Create Google Meet</button><button class="owner">Owner</button></div>
+      </header>
+
+      <section class="tab active" id="overview">
+        <div class="metrics">
+          <article><span>Orders today</span><strong>7</strong><small>$1,846.70</small></article>
+          <article><span>Open inquiries</span><strong>11</strong><small>4 need review</small></article>
+          <article><span>Items online</span><strong>186</strong><small>23 added this week</small></article>
+          <article><span>Active auctions</span><strong>8</strong><small>41 total bids</small></article>
+        </div>
+        <div class="grid two">
+          <section class="panel">
+            <div class="panel-head"><div><span class="eyebrow">Needs attention</span><h2>Customer requests</h2></div><button data-tab-jump="inquiries">View all</button></div>
+            <div id="attentionList"></div>
+          </section>
+          <section class="panel">
+            <div class="panel-head"><div><span class="eyebrow">Today</span><h2>Recent orders</h2></div><button data-tab-jump="orders">View orders</button></div>
+            <div id="recentOrders"></div>
+          </section>
+        </div>
+        <section class="panel">
+          <div class="panel-head"><div><span class="eyebrow">Quick actions</span><h2>Run the digital store</h2></div></div>
+          <div class="quick-grid">
+            <button data-tab-jump="inventory"><strong>Add inventory</strong><span>Prepare a new product listing</span></button>
+            <button data-tab-jump="inquiries"><strong>Review customer item</strong><span>See sell and pawn requests</span></button>
+            <button id="quickMeet2"><strong>Start video review</strong><span>Create a Google Meet for a customer</span></button>
+            <button data-tab-jump="auctions"><strong>Manage auctions</strong><span>Review active and aging inventory</span></button>
+          </div>
+        </section>
+      </section>
+
+      <section class="tab" id="orders">
+        <section class="panel">
+          <div class="panel-head"><div><span class="eyebrow">Online purchases</span><h2>Orders</h2></div><input id="orderSearch" placeholder="Search order or customer" /></div>
+          <div class="table-wrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Item</th><th>Amount</th><th>Fulfillment</th><th>Status</th></tr></thead><tbody id="ordersTable"></tbody></table></div>
+        </section>
+      </section>
+
+      <section class="tab" id="inquiries">
+        <div class="split">
+          <section class="panel">
+            <div class="panel-head"><div><span class="eyebrow">Sell / pawn intake</span><h2>Customer inquiries</h2></div></div>
+            <div id="inquiryList"></div>
+          </section>
+          <section class="panel detail" id="inquiryDetail">
+            <span class="eyebrow">Select an inquiry</span><h2>Customer details</h2><p>Choose a customer request to review item photos, notes, and next steps.</p>
+          </section>
+        </div>
+      </section>
+
+      <section class="tab" id="meetings">
+        <div class="grid two">
+          <section class="panel">
+            <span class="eyebrow">Private customer video review</span>
+            <h2>Create a Google Meet</h2>
+            <p>Use this when photos are not enough and you want to see the item live before asking the customer to come in.</p>
+            <ol class="steps"><li>Open Google Meet and create a new meeting.</li><li>Copy the private meeting link.</li><li>Paste it below and prepare the customer message.</li></ol>
+            <a class="primary-link" href="https://meet.google.com/new" target="_blank" rel="noreferrer">Open Google Meet</a>
+            <label>Customer name<input id="meetCustomer" placeholder="Customer name" /></label>
+            <label>Private Meet link<input id="meetLink" placeholder="https://meet.google.com/..." /></label>
+            <label>Optional note<textarea id="meetNote" rows="3" placeholder="Example: Please have the item, charger, and serial number ready."></textarea></label>
+            <div class="actions"><button id="prepareMessage">Prepare message</button><button class="secondary" id="copyMessage">Copy message</button></div>
+          </section>
+          <section class="panel message-box">
+            <span class="eyebrow">Ready to send</span><h2>Customer message</h2>
+            <div id="customerMessage">Create a meeting and enter the link to generate a ready-to-send message.</div>
+          </section>
+        </div>
+        <section class="panel">
+          <div class="panel-head"><div><span class="eyebrow">Upcoming</span><h2>Video reviews</h2></div></div>
+          <div id="meetingList"></div>
+        </section>
+      </section>
+
+      <section class="tab" id="inventory">
+        <section class="panel">
+          <div class="panel-head"><div><span class="eyebrow">Merchandise</span><h2>Inventory status</h2></div><button id="newListing">Prepare listing</button></div>
+          <div class="table-wrap"><table><thead><tr><th>SKU</th><th>Item</th><th>Category</th><th>Price</th><th>Age</th><th>Channel</th></tr></thead><tbody id="inventoryTable"></tbody></table></div>
+        </section>
+      </section>
+
+      <section class="tab" id="auctions">
+        <section class="panel">
+          <div class="panel-head"><div><span class="eyebrow">A-Z Auction Block</span><h2>Active auctions</h2></div><button id="auctionCandidate">Find aging inventory</button></div>
+          <div id="auctionList" class="auction-grid"></div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="owner.js"></script>
+</body>
+</html>
