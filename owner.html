@@ -3,12 +3,25 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
   <title>A-Z Owner Command Center</title>
   <link rel="stylesheet" href="owner.css" />
 </head>
 <body>
-  <div class="demo">DEMO OWNER COMMAND CENTER — sample data only</div>
-  <div class="shell">
+  <div class="demo" id="demoBanner" hidden>DEMO OWNER COMMAND CENTER — sample data only</div>
+
+  <section class="login-screen" id="loginScreen" hidden>
+    <form class="login-card" id="loginForm">
+      <div class="brand"><div class="mark">A–Z</div><div><strong>Owner Command Center</strong><span>Staff sign in</span></div></div>
+      <label>Username<input name="username" required autocomplete="username" /></label>
+      <label>Password<input name="password" type="password" required autocomplete="current-password" /></label>
+      <p class="form-error" id="loginError" role="alert"></p>
+      <button type="submit">Sign in</button>
+      <a class="store-link" href="index.html">← Back to storefront</a>
+    </form>
+  </section>
+
+  <div class="shell" id="shell" hidden>
     <aside class="sidebar">
       <div class="brand"><div class="mark">A–Z</div><div><strong>Owner Command Center</strong><span>Digital Operations</span></div></div>
       <nav>
@@ -25,15 +38,15 @@
     <main>
       <header class="topbar">
         <div><span class="eyebrow">A-Z Jewelry & Swap Shop</span><h1 id="pageTitle">Overview</h1></div>
-        <div class="top-actions"><button id="quickMeet">Create Google Meet</button><button class="owner">Owner</button></div>
+        <div class="top-actions"><button id="quickMeet">Create Google Meet</button><button class="owner" id="signOut">Sign out</button></div>
       </header>
 
       <section class="tab active" id="overview">
         <div class="metrics">
-          <article><span>Orders today</span><strong>7</strong><small>$1,846.70</small></article>
-          <article><span>Open inquiries</span><strong>11</strong><small>4 need review</small></article>
-          <article><span>Items online</span><strong>186</strong><small>23 added this week</small></article>
-          <article><span>Active auctions</span><strong>8</strong><small>41 total bids</small></article>
+          <article><span>Open orders</span><strong id="mOrders">–</strong><small>reserved online, awaiting payment</small></article>
+          <article><span>New inquiries</span><strong id="mInquiries">–</strong><small>sell, pawn and video requests</small></article>
+          <article><span>Items online</span><strong id="mItems">–</strong><small id="mAging"></small></article>
+          <article><span>Live auctions</span><strong id="mAuctions">–</strong><small id="mBidders"></small></article>
         </div>
         <div class="grid two">
           <section class="panel">
@@ -41,25 +54,25 @@
             <div id="attentionList"></div>
           </section>
           <section class="panel">
-            <div class="panel-head"><div><span class="eyebrow">Today</span><h2>Recent orders</h2></div><button data-tab-jump="orders">View orders</button></div>
+            <div class="panel-head"><div><span class="eyebrow">Latest</span><h2>Recent orders</h2></div><button data-tab-jump="orders">View orders</button></div>
             <div id="recentOrders"></div>
           </section>
         </div>
         <section class="panel">
           <div class="panel-head"><div><span class="eyebrow">Quick actions</span><h2>Run the digital store</h2></div></div>
           <div class="quick-grid">
-            <button data-tab-jump="inventory"><strong>Add inventory</strong><span>Prepare a new product listing</span></button>
+            <button data-tab-jump="inventory"><strong>Add inventory</strong><span>Photo, name and price — live in a minute</span></button>
             <button data-tab-jump="inquiries"><strong>Review customer item</strong><span>See sell and pawn requests</span></button>
             <button id="quickMeet2"><strong>Start video review</strong><span>Create a Google Meet for a customer</span></button>
-            <button data-tab-jump="auctions"><strong>Manage auctions</strong><span>Review active and aging inventory</span></button>
+            <button data-tab-jump="auctions"><strong>Manage auctions</strong><span>Put aging inventory on the block</span></button>
           </div>
         </section>
       </section>
 
       <section class="tab" id="orders">
         <section class="panel">
-          <div class="panel-head"><div><span class="eyebrow">Online purchases</span><h2>Orders</h2></div><input id="orderSearch" placeholder="Search order or customer" /></div>
-          <div class="table-wrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Item</th><th>Amount</th><th>Fulfillment</th><th>Status</th></tr></thead><tbody id="ordersTable"></tbody></table></div>
+          <div class="panel-head"><div><span class="eyebrow">Reserved online</span><h2>Orders</h2></div><input id="orderSearch" placeholder="Search order or customer" /></div>
+          <div class="table-wrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Amount</th><th>Fulfillment</th><th>Status</th></tr></thead><tbody id="ordersTable"></tbody></table></div>
         </section>
       </section>
 
@@ -94,22 +107,55 @@
           </section>
         </div>
         <section class="panel">
-          <div class="panel-head"><div><span class="eyebrow">Upcoming</span><h2>Video reviews</h2></div></div>
+          <div class="panel-head"><div><span class="eyebrow">Requested from the website</span><h2>Video review requests</h2></div></div>
           <div id="meetingList"></div>
         </section>
       </section>
 
       <section class="tab" id="inventory">
         <section class="panel">
-          <div class="panel-head"><div><span class="eyebrow">Merchandise</span><h2>Inventory status</h2></div><button id="newListing">Prepare listing</button></div>
-          <div class="table-wrap"><table><thead><tr><th>SKU</th><th>Item</th><th>Category</th><th>Price</th><th>Age</th><th>Channel</th></tr></thead><tbody id="inventoryTable"></tbody></table></div>
+          <div class="panel-head"><div><span class="eyebrow">New listing</span><h2>Add an item</h2></div></div>
+          <form class="item-form" id="itemForm">
+            <label>Photo<input name="photo" type="file" accept="image/*" capture="environment" /></label>
+            <label>Item name<input name="name" required minlength="2" maxlength="120" placeholder="DeWalt 20V MAX drill kit" /></label>
+            <label>Category<select name="category" required><option>Jewelry</option><option>Electronics</option><option>Tools</option><option>Gaming</option><option>Music</option><option>Collectibles</option><option>Other</option></select></label>
+            <label>Price (USD)<input name="price" type="number" min="0" step="0.01" required /></label>
+            <label>Condition<select name="condition"><option>Excellent</option><option>Very Good</option><option selected>Good</option><option>Fair</option><option>For parts</option></select></label>
+            <label>Badge (optional)<input name="badge" maxlength="30" placeholder="Fresh In" /></label>
+            <label class="wide">Description<textarea name="description" rows="3" maxlength="4000" placeholder="Model, what's included, testing notes"></textarea></label>
+            <label>Not for sale before (hold period)<input name="available_on" type="date" /></label>
+            <label class="check"><input name="ship" type="checkbox" value="true" /> Can ship</label>
+            <label class="check"><input name="publish" type="checkbox" value="true" checked /> Publish to the store now</label>
+            <p class="form-error wide" id="itemError" role="alert"></p>
+            <button type="submit" class="wide">Save item</button>
+          </form>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><div><span class="eyebrow">Merchandise</span><h2>Inventory</h2></div><input id="inventorySearch" placeholder="Search SKU or item" /></div>
+          <div class="table-wrap"><table><thead><tr><th>SKU</th><th>Item</th><th>Price</th><th>Age</th><th>Status</th><th>Actions</th></tr></thead><tbody id="inventoryTable"></tbody></table></div>
         </section>
       </section>
 
       <section class="tab" id="auctions">
         <section class="panel">
-          <div class="panel-head"><div><span class="eyebrow">A-Z Auction Block</span><h2>Active auctions</h2></div><button id="auctionCandidate">Find aging inventory</button></div>
+          <div class="panel-head"><div><span class="eyebrow">A-Z Auction Block</span><h2>Start an auction</h2></div><button id="auctionCandidate">Show aging items</button></div>
+          <form class="item-form" id="auctionForm">
+            <label class="wide">Item<select name="item_id" id="auctionItem" required></select></label>
+            <label>Starting bid (USD)<input name="start" type="number" min="1" step="0.01" required /></label>
+            <label>Reserve (optional, hidden)<input name="reserve" type="number" min="1" step="0.01" /></label>
+            <label>Runs for<select name="hours"><option value="24">1 day</option><option value="72" selected>3 days</option><option value="120">5 days</option><option value="168">7 days</option></select></label>
+            <label>Starts<select name="starts_in_hours"><option value="0">Now</option><option value="24">Tomorrow</option><option value="48">In 2 days</option></select></label>
+            <p class="form-error wide" id="auctionError" role="alert"></p>
+            <button type="submit" class="wide">Put it on the block</button>
+          </form>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><div><span class="eyebrow">Live and recent</span><h2>Auctions</h2></div></div>
           <div id="auctionList" class="auction-grid"></div>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><div><span class="eyebrow">Who may bid</span><h2>Bidder accounts</h2></div></div>
+          <div class="table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Joined</th><th>Status</th><th>Actions</th></tr></thead><tbody id="biddersTable"></tbody></table></div>
         </section>
       </section>
     </main>
