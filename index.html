@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="demo-banner">DEMONSTRATION STOREFRONT — sample inventory, bids and checkout are not live.</div>
+  <div class="demo-banner" hidden>DEMONSTRATION STOREFRONT — sample inventory, bids and checkout are not live.</div>
   <header class="site-header">
     <div class="header-main">
       <a class="brand" href="#top" aria-label="A-Z Jewelry & Swap Shop home">
@@ -68,8 +68,8 @@
 
     <section class="section dark-section" id="auctions">
       <div class="section-heading light">
-        <div><span class="eyebrow">A-Z Auction Block</span><h2>Bid on unique finds</h2><p>Timed demo auctions for aged inventory, collectibles and special pieces.</p></div>
-        <a class="btn outline" href="#auctions">View all auctions</a>
+        <div><span class="eyebrow">A-Z Auction Block</span><h2>Bid on unique finds</h2><p>Timed auctions for collectibles, estate pieces and special finds. Late bids extend the clock, so nobody gets sniped.</p></div>
+        <div class="bidder-bar" id="bidderBar"></div>
       </div>
       <div class="auction-grid" id="auctionGrid"></div>
     </section>
@@ -89,7 +89,7 @@
         <label>Photos<input name="photos" type="file" accept="image/*" multiple /></label>
         <label>Notes<textarea name="notes" rows="3" placeholder="Model number, accessories, known issues..."></textarea></label>
         <button class="btn primary full" type="submit">Send inquiry</button>
-        <small>Demo only. Final acceptance and value require staff review and, when appropriate, in-person inspection.</small>
+        <small>No obligation. Final acceptance and value require staff review and, when appropriate, in-person inspection.</small>
       </form>
     </section>
 
@@ -129,13 +129,13 @@
     </section>
   </main>
 
-  <footer><div class="brand footer-brand"><span class="brand-mark">A–Z</span><span><strong>Jewelry & Swap Shop</strong><small>Peoria, Illinois</small></span></div><p>Pawn • Jewelry • Resale • Auctions</p><p class="legal">Demonstration site prepared for presentation. Product images, inventory, prices, auction data and checkout are sample content until connected to live store systems.</p></footer>
+  <footer><div class="brand footer-brand"><span class="brand-mark">A–Z</span><span><strong>Jewelry & Swap Shop</strong><small>Peoria, Illinois</small></span></div><p>Pawn • Jewelry • Resale • Auctions</p><p class="legal">Prices and availability may change. Items are reserved online and paid for with the shop. Any regulated pawn transaction is completed in store.</p></footer>
 
-  <aside class="cart-drawer" id="cartDrawer" aria-hidden="true"><div class="drawer-head"><h3>Your cart</h3><button id="closeCart">×</button></div><div id="cartItems"></div><div class="cart-total"><span>Total</span><strong id="cartTotal">$0.00</strong></div><button class="btn primary full" id="checkoutBtn">Demo checkout</button></aside>
+  <aside class="cart-drawer" id="cartDrawer" aria-hidden="true"><div class="drawer-head"><h3>Your cart</h3><button id="closeCart">×</button></div><div id="cartItems"></div><div class="cart-total"><span>Total</span><strong id="cartTotal">$0.00</strong></div><button class="btn primary full" id="checkoutBtn">Reserve for pickup or shipping</button></aside>
   <div class="overlay" id="overlay"></div>
 
   <button class="ai-button" id="aiButton">Ask A-Z</button>
-  <section class="chat-panel" id="chatPanel"><div class="chat-head"><div><strong>A-Z Digital Assistant</strong><small>Demo customer service</small></div><button id="closeChat">×</button></div><div class="chat-log" id="chatLog"><div class="bot">Hi. I can help you find items, explain the sell/pawn process, or give store information.</div></div><form id="chatForm"><input id="chatInput" placeholder="Ask about inventory..." /><button>Send</button></form></section>
+  <section class="chat-panel" id="chatPanel"><div class="chat-head"><div><strong>A-Z Digital Assistant</strong><small>Store assistant</small></div><button id="closeChat">×</button></div><div class="chat-log" id="chatLog"><div class="bot">Hi. I can help you find items, explain the sell/pawn process, or give store information.</div></div><form id="chatForm"><input id="chatInput" placeholder="Ask about inventory..." /><button>Send</button></form></section>
 
   <div class="modal" id="modal"><div class="modal-card"><button class="modal-close" id="modalClose">×</button><div id="modalContent"></div></div></div>
   <div class="toast" id="toast"></div>

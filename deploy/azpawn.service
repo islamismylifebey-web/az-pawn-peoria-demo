@@ -1,0 +1,20 @@
+[Unit]
+Description=A-Z Pawn store (storefront, auctions, Command Center)
+After=network.target
+
+[Service]
+User=azpawn
+Group=azpawn
+WorkingDirectory=/opt/azpawn/server
+Environment=AZ_DATA_DIR=/var/lib/azpawn
+Environment=AZ_SITE_ROOT=/opt/azpawn
+Environment=AZ_TRUST_PROXY=1
+ExecStart=/opt/azpawn/.venv/bin/python -m azpawn.manage serve --host 127.0.0.1 --port 8080
+Restart=on-failure
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/azpawn
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
