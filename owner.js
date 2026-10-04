@@ -187,13 +187,17 @@ function renderAuctions(){
   const reserve=a.reserve_cents?` · reserve ${money(a.reserve_cents)} ${a.reserve_met?"met":"not met"}`:"";
   let footer="";
   if(a.status==="live"||a.status==="scheduled")footer=`<span>${a.status==="live"?"closes in "+timeLeft(a.ends_at):"opens in "+timeLeft(a.starts_at)}</span><button class="secondary" data-cancel="${a.id}">Cancel</button>`;
-  else if(a.status==="ended")footer=a.winner?`<span class="winner">Winner: <strong>${esc(a.winner.name)}</strong> · <a href="tel:${esc(a.winner.phone)}">${esc(a.winner.phone)}</a> · ${esc(a.winner.email)}<br>Collect ${money(a.final_cents)} and arrange pickup.</span>`:`<span>${a.bid_count?"Reserve not met":"No bids"} — item is back in the store.</span>`;
+  else if(a.status==="ended")footer=a.settled_at?`<span class="muted">Settled ✓</span>`:a.winner?`<span class="winner">Winner: <strong>${esc(a.winner.name)}</strong> · <a href="tel:${esc(a.winner.phone)}">${esc(a.winner.phone)}</a> · ${esc(a.winner.email)}<br>Collect ${money(a.final_cents)} and arrange pickup.</span><button data-settle="${a.id}">Mark collected</button>`:`<span>${a.bid_count?"Reserve not met":"No bids"} — item is back in the store.</span><button data-settle="${a.id}">Return to store</button>`;
   else footer=`<span>${esc(a.status)}</span>`;
   return `<article class="auction-card"><strong>${esc(a.title)}</strong><span>${a.bid_count} bid${a.bid_count===1?"":"s"} · ${esc(a.status)}${reserve}</span><div class="bid">${money(a.high_cents??a.start_cents)}</div><div class="auction-foot">${footer}</div></article>`}).join("")||'<p class="muted">No auctions yet. Start one above.</p>';
  document.querySelectorAll("[data-cancel]").forEach(b=>b.onclick=async()=>{
   if(!guard())return;
   if(!confirm("Cancel this auction? Bids are discarded and the item goes back in the store."))return;
   try{await api(`/api/staff/auctions/${b.dataset.cancel}/cancel`,{method:"POST"});showToast("Auction cancelled");await refresh()}catch(err){showToast(err.message)}});
+ document.querySelectorAll("[data-settle]").forEach(b=>b.onclick=async()=>{
+  if(!guard())return;
+  if(!confirm("Settle this auction? The winner's item is marked sold (payment collected), or with no winner the item returns to the store."))return;
+  try{await api(`/api/staff/auctions/${b.dataset.settle}/settle`,{method:"POST"});showToast("Auction settled");await refresh()}catch(err){showToast(err.message)}});
 }
 function renderBidders(){
  $("#biddersTable").innerHTML=state.bidders.map(b=>`<tr><td><strong>${esc(b.name)}</strong></td><td>${esc(b.email)}</td><td><a href="tel:${esc(b.phone)}">${esc(b.phone)}</a></td><td>${day(b.created_at)}</td><td><span class="status ${b.status==="pending"?"maroon":""}">${esc(b.status)}</span></td>

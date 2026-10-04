@@ -68,6 +68,7 @@ CREATE TABLE IF NOT EXISTS auctions (
     winner_bidder_id INTEGER REFERENCES bidders(id),
     final_cents INTEGER,
     reserve_met INTEGER,
+    settled_at TEXT,
     created_at TEXT NOT NULL
 );
 
@@ -132,8 +133,16 @@ def init(path: Path) -> None:
     conn = connect(path)
     try:
         conn.executescript(SCHEMA)
+        _migrate(conn)
     finally:
         conn.close()
+
+
+def _migrate(conn: sqlite3.Connection) -> None:
+    """Bring databases created before a schema change up to date."""
+    cols = {row["name"] for row in conn.execute("PRAGMA table_info(auctions)")}
+    if "settled_at" not in cols:
+        conn.execute("ALTER TABLE auctions ADD COLUMN settled_at TEXT")
 
 
 @contextmanager

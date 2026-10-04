@@ -155,3 +155,110 @@ def test_only_the_storefront_files_are_served(client):
     assert client.get("/owner.js").status_code == 200
     for path in ("/server/azpawn/app.py", "/.git/config", "/README.md", "/data/azpawn.sqlite3", "/media/../azpawn.sqlite3"):
         assert client.get(path).status_code == 404, path
+
+
+# ---- security regression tests (Copilot review of PR #1, fixed Oct 2026) ----
+
+def test_orders_cannot_bypass_the_holding_period(client):
+    staff(client)
+    held = add_item(client, "Held Ring", available_on="2999-01-01")
+    order = {"name": "Tanya R.", "phone": "3095550199", "item_ids": [held["id"]]}
+    assert client.post("/api/orders", json=order, headers=H).status_code == 409
+
+
+def test_auctions_cannot_take_held_items(client):
+    staff(client)
+    held = add_item(client, "Held Watch", available_on="2999-01-01")
+    response = client.post(
+        "/api/staff/auctions", json={"item_id": held["id"], "start": 50, "hours": 24}, headers=H
+    )
+    assert response.status_code == 409
+
+
+def test_inquiry_photos_need_a_staff_session(client):
+    response = client.post(
+        "/api/inquiries",
+        data={"kind": "sell", "name": "James Carter", "phone": "3095550148"},
+        files=[("photos", ("m.jpg", photo_bytes(), "image/jpeg"))],
+        headers=H,
+    )
+    assert response.status_code == 201
+    staff(client)
+    [inquiry] = client.get("/api/staff/inquiries").json()
+    [photo_path] = inquiry["photos"]
+    assert photo_path.startswith("/media/inquiries/")
+    stranger = TestClient(client.app)
+    assert stranger.get(photo_path).status_code == 401
+    # Item photos stay public; the protected route answers 401 before 404.
+    item = add_item(client, "Public Ring")
+    assert stranger.get(item["image"]).status_code == 200
+    assert stranger.get("/media/inquiries/does-not-exist.jpg").status_code == 401
+
+
+def test_blank_names_are_rejected_not_stored_empty(client):
+    for payload in ({"name": "  ", "phone": "3095550148"}, {"name": "James Carter", "phone": "       "}):
+        response = client.post("/api/inquiries", data={"kind": "sell", **payload}, headers=H)
+        assert response.status_code == 400, payload
+    staff(client)
+    response = client.post(
+        "/api/staff/items", data={"name": "   ", "category": "Jewelry", "price": "10"}, headers=H
+    )
+    assert response.status_code == 400
+    bad_order = {"name": "  ", "phone": "3095550199", "item_ids": [1]}
+    assert client.post("/api/orders", json=bad_order, headers=H).status_code == 422
+
+
+def test_failed_photo_batch_leaves_no_orphans(client, tmp_path):
+    response = client.post(
+        "/api/inquiries",
+        data={"kind": "sell", "name": "James Carter", "phone": "3095550148"},
+        files=[
+            ("photos", ("a.jpg", photo_bytes(), "image/jpeg")),
+            ("photos", ("b.jpg", b"not an image", "image/jpeg")),
+        ],
+        headers=H,
+    )
+    assert response.status_code == 400
+    inquiries_dir = tmp_path / "data" / "media" / "inquiries"
+    left = list(inquiries_dir.iterdir()) if inquiries_dir.exists() else []
+    assert left == []
+
+
+def test_huge_dimension_images_are_rejected_before_decoding(client):
+    import struct
+    import zlib
+
+    def chunk(ctype, data):
+        part = struct.pack(">I", len(data)) + ctype + data
+        return part + struct.pack(">I", zlib.crc32(ctype + data) & 0xFFFFFFFF)
+
+    # 20000x20000 in the header, a few dozen bytes on the wire.
+    ihdr = struct.pack(">IIBBBBB", 20000, 20000, 8, 2, 0, 0, 0)
+    png = b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", ihdr) + chunk(b"IEND", b"")
+    assert len(png) < 1024
+    response = client.post(
+        "/api/inquiries",
+        data={"kind": "sell", "name": "James Carter", "phone": "3095550148"},
+        files=[("photos", ("big.png", png, "image/png"))],
+        headers=H,
+    )
+    assert response.status_code == 400
+
+
+def test_ended_auctions_settle_to_sold_or_back_to_live(client):
+    staff(client)
+    watch = add_item(client, "Settle Watch", price="300")
+    created = client.post(
+        "/api/staff/auctions", json={"item_id": watch["id"], "start": 150, "hours": 1}, headers=H
+    )
+    auction_id = created.json()["id"]
+    conn = db.connect(client.app.state.db_path)
+    conn.execute("UPDATE auctions SET ends_at = ? WHERE id = ?", (iso(utcnow()), auction_id))
+    conn.close()
+    [closed] = client.get("/api/staff/auctions").json()
+    assert closed["status"] == "ended" and closed["winner"] is None
+    assert client.post(f"/api/staff/auctions/{auction_id}/settle", headers=H).status_code == 200
+    statuses = {i["name"]: i["status"] for i in client.get("/api/staff/items").json()}
+    assert statuses["Settle Watch"] == "live"
+    # Settling twice is a clean 409, not a double state change.
+    assert client.post(f"/api/staff/auctions/{auction_id}/settle", headers=H).status_code == 409

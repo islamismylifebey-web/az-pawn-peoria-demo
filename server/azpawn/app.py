@@ -45,11 +45,23 @@ def _cents(value: float) -> int:
 _EMAIL = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
 
+# NOTE: every model with a min_length'd name/phone strips BEFORE validation,
+# so "  " fails instead of passing and being stored as "".
+# (field_validator with mode="before" on each model below.)
+
+
 class BidderRegistration(BaseModel):
     name: str = Field(min_length=2, max_length=80)
     email: str = Field(max_length=200)
     phone: str = Field(min_length=7, max_length=30)
     password: str = Field(min_length=8, max_length=200)
+
+    _strip = field_validator("name", "phone", mode="before")
+
+    @_strip
+    @classmethod
+    def _strip_fields(cls, value: object) -> object:
+        return value.strip() if isinstance(value, str) else value
 
     @field_validator("email")
     @classmethod
@@ -76,6 +88,13 @@ class OrderIn(BaseModel):
     fulfillment: Literal["pickup", "ship"] = "pickup"
     notes: str = Field(default="", max_length=1000)
     item_ids: list[int] = Field(min_length=1, max_length=20)
+
+    _strip = field_validator("name", "phone", mode="before")
+
+    @_strip
+    @classmethod
+    def _strip_fields(cls, value: object) -> object:
+        return value.strip() if isinstance(value, str) else value
 
 
 class StatusIn(BaseModel):
@@ -235,8 +254,8 @@ def create_app(
     async def create_inquiry(
         request: Request,
         kind: Literal["sell", "pawn", "video"] = Form(...),
-        name: str = Form(..., min_length=2, max_length=80),
-        phone: str = Form(..., min_length=7, max_length=30),
+        name: str = Form(...),
+        phone: str = Form(...),
         email: str = Form("", max_length=200),
         item: str = Form("", max_length=200),
         condition: str = Form("", max_length=40),
@@ -245,19 +264,33 @@ def create_app(
         conn: sqlite3.Connection = Depends(get_db),
     ) -> dict:
         limit(request, "inquiry", 6, 3600)
+        # Strip BEFORE length checks: FastAPI's min_length runs on the raw
+        # value, so "  " would pass and be stored as an empty string.
+        name, phone = name.strip(), phone.strip()
+        if not 2 <= len(name) <= 80:
+            raise HTTPException(400, "Please enter your name.")
+        if not 7 <= len(phone) <= 30:
+            raise HTTPException(400, "Please enter a phone number we can reach you at.")
         uploads = [photo for photo in photos if photo.filename]
         if len(uploads) > MAX_PHOTOS:
             raise HTTPException(400, f"Please send at most {MAX_PHOTOS} photos.")
         saved = []
-        for photo in uploads:
-            try:
+        try:
+            for photo in uploads:
                 saved.append(save_photo(await photo.read(), media_dir, "inquiries"))
-            except BadImage as exc:
-                raise HTTPException(400, str(exc)) from exc
+        except BadImage as exc:
+            # A batch is all-or-nothing: remove anything already written so a
+            # failed upload leaves no orphaned customer photos on disk.
+            for rel in saved:
+                try:
+                    (media_dir / rel.removeprefix("/media/")).unlink()
+                except OSError:
+                    pass
+            raise HTTPException(400, str(exc)) from exc
         conn.execute(
             "INSERT INTO inquiries (kind, name, phone, email, item, condition, notes, photos, created_at) "
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            (kind, name.strip(), phone.strip(), email.strip(), item.strip(), condition.strip(), notes.strip(),
+            (kind, name, phone, email.strip(), item.strip(), condition.strip(), notes.strip(),
              json.dumps(saved), iso(utcnow())),
         )
         return {"ok": True}
@@ -266,12 +299,21 @@ def create_app(
     def create_order(order: OrderIn, request: Request, conn: sqlite3.Connection = Depends(get_db)) -> dict:
         limit(request, "order", 5, 3600)
         ids = sorted(set(order.item_ids))
+        # Same predicate the storefront uses: live AND past any holding period.
+        # Checked inside the transaction so a crafted cart cannot reserve an
+        # item whose available_on is still in the future.
+        today = date.today().isoformat()
         with db.transaction(conn):
             rows = conn.execute(
                 f"SELECT * FROM items WHERE id IN ({','.join('?' * len(ids))})", ids
             ).fetchall()
             found = {row["id"]: row for row in rows}
-            unavailable = [i for i in ids if i not in found or found[i]["status"] != "live"]
+            unavailable = [
+                i for i in ids
+                if i not in found
+                or found[i]["status"] != "live"
+                or (found[i]["available_on"] is not None and found[i]["available_on"] > today)
+            ]
             if unavailable:
                 raise HTTPException(409, "Some items in your cart were just sold or reserved. Please refresh.")
             if order.fulfillment == "ship" and any(not found[i]["ship"] for i in ids):
@@ -392,7 +434,7 @@ def create_app(
 
     @app.post("/api/staff/items", status_code=201)
     async def create_item(
-        name: str = Form(..., min_length=2, max_length=120),
+        name: str = Form(...),
         category: str = Form(...),
         price: float = Form(..., ge=0, le=1_000_000),
         condition: str = Form("Good", max_length=40),
@@ -407,6 +449,9 @@ def create_app(
     ) -> dict:
         if category not in CATEGORIES:
             raise HTTPException(400, f"Category must be one of {', '.join(CATEGORIES)}.")
+        name = name.strip()
+        if not 2 <= len(name) <= 120:
+            raise HTTPException(400, "Item name must be 2-120 characters.")
         image = ""
         if photo is not None and photo.filename:
             try:
@@ -419,7 +464,7 @@ def create_app(
             cursor = conn.execute(
                 "INSERT INTO items (sku, name, category, price_cents, condition, description, badge, image, ship, "
                 "status, available_on, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (sku, name.strip(), category, _cents(price), condition, description.strip(), badge.strip(), image,
+                (sku, name, category, _cents(price), condition, description.strip(), badge.strip(), image,
                  int(ship), "live" if publish else "draft", available_on.isoformat() if available_on else None,
                  stamp, stamp),
             )
@@ -519,6 +564,7 @@ def create_app(
             view["reserve_cents"] = row["reserve_cents"]
             view["item_id"] = row["item_id"]
             view["final_cents"] = row["final_cents"]
+            view["settled_at"] = row["settled_at"]
             winner = None
             if row["winner_bidder_id"] is not None:
                 found = conn.execute(
@@ -542,6 +588,10 @@ def create_app(
                 raise HTTPException(404, "No such item.")
             if item["status"] not in ("live", "draft", "hidden"):
                 raise HTTPException(409, f"This item is {item['status']} and cannot go to auction.")
+            # Held items stay hidden until their release date — creating the
+            # auction would expose them through /api/auctions immediately.
+            if item["available_on"] is not None and item["available_on"] > date.today().isoformat():
+                raise HTTPException(409, "This item is still in its holding period and cannot go to auction yet.")
             cursor = conn.execute(
                 "INSERT INTO auctions (item_id, title, description, image, start_cents, reserve_cents, starts_at, "
                 "ends_at, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -552,6 +602,35 @@ def create_app(
             conn.execute("UPDATE items SET status = 'auction', updated_at = ? WHERE id = ?", (iso(now), item["id"]))
         row = conn.execute("SELECT * FROM auctions WHERE id = ?", (cursor.lastrowid,)).fetchone()
         return auctions.public_view(conn, row)
+
+    @app.post("/api/staff/auctions/{auction_id}/settle")
+    def settle_auction(auction_id: int, user: int = Depends(staff_id),
+                       conn: sqlite3.Connection = Depends(get_db)) -> dict:
+        """Complete an ended auction: the winner's item goes to sold (payment
+        collected in person), an item with no winner returns to the store."""
+        auctions.settle_due(conn)
+        with db.transaction(conn):
+            row = conn.execute("SELECT * FROM auctions WHERE id = ?", (auction_id,)).fetchone()
+            if row is None:
+                raise HTTPException(404, "No such auction.")
+            if row["status"] != "ended":
+                raise HTTPException(409, "Only an ended auction can be settled.")
+            if row["settled_at"] is not None:
+                raise HTTPException(409, "This auction is already settled.")
+            stamp = iso(utcnow())
+            if row["item_id"] is not None:
+                if row["winner_bidder_id"] is not None:
+                    conn.execute(
+                        "UPDATE items SET status = 'sold', updated_at = ? WHERE id = ? AND status = 'reserved'",
+                        (stamp, row["item_id"]),
+                    )
+                else:
+                    conn.execute(
+                        "UPDATE items SET status = 'live', updated_at = ? WHERE id = ? AND status = 'reserved'",
+                        (stamp, row["item_id"]),
+                    )
+            conn.execute("UPDATE auctions SET settled_at = ? WHERE id = ?", (stamp, auction_id))
+        return {"ok": True}
 
     @app.post("/api/staff/auctions/{auction_id}/cancel")
     def cancel_auction(auction_id: int, user: int = Depends(staff_id), conn: sqlite3.Connection = Depends(get_db)) -> dict:
@@ -589,7 +668,19 @@ def create_app(
 
     # ------------------------------------------------------------- site
 
-    app.mount("/media", StaticFiles(directory=media_dir), name="media")
+    # Only item photos are public. Inquiry photos belong to the sign-in-only
+    # Command Center — random filenames are not an authorization boundary.
+    (media_dir / "items").mkdir(parents=True, exist_ok=True)
+    app.mount("/media/items", StaticFiles(directory=media_dir / "items"), name="item-media")
+
+    @app.get("/media/inquiries/{name}")
+    def inquiry_photo(name: str, user: int = Depends(staff_id)) -> FileResponse:
+        # staff_id runs first: no session, no photo — even for made-up names.
+        safe = Path(name).name
+        path = media_dir / "inquiries" / safe
+        if not path.is_file():
+            raise HTTPException(404, "No such photo.")
+        return FileResponse(path, media_type="image/jpeg")
 
     @app.get("/")
     def home() -> FileResponse:

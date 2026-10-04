@@ -44,7 +44,7 @@ Tests: `cd server && ../.venv/bin/pip install pytest httpx && ../.venv/bin/pytho
 
 Needs root on the server, once:
 
-1. `sudo useradd --system --home /var/lib/azpawn azpawn && sudo mkdir -p /var/lib/azpawn && sudo chown azpawn: /var/lib/azpawn`
+1. `sudo useradd --system --home /var/lib/azpawn azpawn && sudo mkdir -p /var/lib/azpawn && sudo chown azpawn:azpawn /var/lib/azpawn && sudo chmod 700 /var/lib/azpawn` (holds password hashes, customer data and photos — never world-readable)
 2. `sudo git clone https://github.com/islamismylifebey-web/az-pawn-peoria-demo /opt/azpawn`
    then `sudo python3 -m venv /opt/azpawn/.venv && sudo /opt/azpawn/.venv/bin/pip install -r /opt/azpawn/server/requirements.txt`
 3. Staff login: `cd /opt/azpawn/server && sudo -u azpawn AZ_DATA_DIR=/var/lib/azpawn /opt/azpawn/.venv/bin/python -m azpawn.manage add-staff owner`
@@ -52,7 +52,7 @@ Needs root on the server, once:
 5. HTTPS: install Caddy and add `deploy/Caddyfile` to `/etc/caddy/Caddyfile`, then `sudo systemctl reload caddy`.
 6. DNS: point `azpawn.galorweb.works` at the server's IP (an A record), and remove the
    custom domain from this repository's GitHub Pages settings so the two don't compete.
-7. Backups: install `sqlite3` and add `deploy/backup.sh` to the azpawn user's crontab.
+7. Backups: install `sqlite3`, provision the backup directory first (`sudo mkdir -p /var/backups/azpawn && sudo chown azpawn:azpawn /var/backups/azpawn && sudo chmod 700 /var/backups/azpawn` — the service account cannot create it itself), then add `deploy/backup.sh` to the azpawn user's crontab.
 
 ## Before the public launch
 
