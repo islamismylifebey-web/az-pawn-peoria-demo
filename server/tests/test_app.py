@@ -224,25 +224,63 @@ def test_failed_photo_batch_leaves_no_orphans(client, tmp_path):
     assert left == []
 
 
-def test_huge_dimension_images_are_rejected_before_decoding(client):
-    import struct
-    import zlib
+def test_item_patch_validates_names_after_stripping(client):
+    staff(client)
+    item = add_item(client)
+    path = f"/api/staff/items/{item['id']}"
+    for name in ("  ", "\t\n", " a "):
+        response = client.patch(path, json={"name": name, "price": 1}, headers=H)
+        assert response.status_code == 422, response.text
+        [stored] = client.get("/api/staff/items").json()
+        assert stored["name"] == item["name"]
+        assert stored["price_cents"] == item["price_cents"]
+    response = client.patch(path, json={"name": "  Silver Chain  "}, headers=H)
+    assert response.status_code == 200
+    assert response.json()["name"] == "Silver Chain"
+    # A name can still be omitted or null when updating another field.
+    for patch in ({"price": 100}, {"name": None, "price": 110}):
+        response = client.patch(path, json=patch, headers=H)
+        assert response.status_code == 200
+        assert response.json()["name"] == "Silver Chain"
 
-    def chunk(ctype, data):
-        part = struct.pack(">I", len(data)) + ctype + data
-        return part + struct.pack(">I", zlib.crc32(ctype + data) & 0xFFFFFFFF)
 
-    # 20000x20000 in the header, a few dozen bytes on the wire.
-    ihdr = struct.pack(">IIBBBBB", 20000, 20000, 8, 2, 0, 0, 0)
-    png = b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", ihdr) + chunk(b"IEND", b"")
-    assert len(png) < 1024
+@pytest.mark.parametrize("endpoint", ["/api/inquiries", "/api/staff/items"])
+def test_images_over_25mp_are_rejected_before_decoding(client, endpoint, monkeypatch):
+    from azpawn import images
+
+    # Valid 25.005MP PNG: above our cap, below Pillow's warning threshold.
+    size = (5001, 5000)
+    assert 25_000_000 < size[0] * size[1] < Image.MAX_IMAGE_PIXELS
+    buffer = io.BytesIO()
+    with Image.new("1", size) as image:
+        image.save(buffer, "PNG")
+    png = buffer.getvalue()
+    assert len(png) < 10_000
+    with Image.open(io.BytesIO(png)) as image:
+        image.load()  # Prove this is a readable photo, not just a fake header.
+        assert image.size == size
+
+    def unexpected_decode(*args, **kwargs):
+        pytest.fail("Oversized image reached EXIF transposition / decoding")
+
+    monkeypatch.setattr(images.ImageOps, "exif_transpose", unexpected_decode)
+    if endpoint == "/api/staff/items":
+        staff(client)
+        data = {"name": "Large Photo", "category": "Jewelry", "price": "10"}
+        field = "photo"
+    else:
+        data = {"kind": "sell", "name": "James Carter", "phone": "3095550148"}
+        field = "photos"
     response = client.post(
-        "/api/inquiries",
-        data={"kind": "sell", "name": "James Carter", "phone": "3095550148"},
-        files=[("photos", ("big.png", png, "image/png"))],
+        endpoint,
+        data=data,
+        files=[(field, ("big.png", png, "image/png"))],
         headers=H,
     )
     assert response.status_code == 400
+    assert response.json() == {
+        "detail": "That photo is too large (5001x5000). Please use a smaller image."
+    }
 
 
 def test_ended_auctions_settle_to_sold_or_back_to_live(client):
