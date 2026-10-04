@@ -9,6 +9,10 @@ from PIL import Image, ImageOps, UnidentifiedImageError
 
 MAX_UPLOAD_BYTES = 10 * 1024 * 1024
 MAX_EDGE = 1600
+# Hard cap on decoded pixels, checked from the image header BEFORE any pixel
+# buffer is allocated. A 10 MB highly-compressed upload can otherwise expand to
+# hundreds of megabytes in convert("RGB") on this public endpoint.
+MAX_PIXELS = 25_000_000
 
 
 class BadImage(ValueError):
@@ -23,6 +27,12 @@ def save_photo(data: bytes, media_dir: Path, folder: str) -> str:
         with Image.open(io.BytesIO(data)) as probe:
             probe.verify()
         with Image.open(io.BytesIO(data)) as image:
+            # size comes from the header — no pixels decoded yet.
+            width, height = image.size
+            if width * height > MAX_PIXELS:
+                raise BadImage(
+                    f"That photo is too large ({width}x{height}). Please use a smaller image."
+                )
             image = ImageOps.exif_transpose(image)
             image = image.convert("RGB")
             image.thumbnail((MAX_EDGE, MAX_EDGE))
