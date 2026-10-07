@@ -112,6 +112,11 @@ class ItemPatch(BaseModel):
     status: Literal["draft", "live", "reserved", "sold", "hidden"] | None = None
     available_on: date | None = None
 
+    @field_validator("name", mode="before")
+    @classmethod
+    def strip_name(cls, value: object) -> object:
+        return value.strip() if isinstance(value, str) else value
+
     @field_validator("category")
     @classmethod
     def known_category(cls, value: str | None) -> str | None:
