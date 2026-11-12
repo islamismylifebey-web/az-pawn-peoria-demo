@@ -122,15 +122,22 @@ def import_inventory(args: argparse.Namespace) -> int:
     try:
         stamp = iso(utcnow())
         for row in rows:
-            if conn.execute("SELECT 1 FROM items WHERE sku = ?", (row["sku"],)).fetchone():
-                continue
-            photo = src.parent.parent / row["image"]
             name = f"inv-{row['key']}.jpg"
+            if conn.execute("SELECT 1 FROM items WHERE image = ?", (f"/media/items/{name}",)).fetchone():
+                continue  # this listing was already imported
+            # Never overwrite or skip over existing stock (e.g. seed-demo items) that
+            # happens to use the same SKU: give the imported listing the next free one.
+            prefix, _, number = row["sku"].rpartition("-")
+            sku, number = row["sku"], int(number)
+            while conn.execute("SELECT 1 FROM items WHERE sku = ?", (sku,)).fetchone():
+                number += 1
+                sku = f"{prefix}-{number}"
+            photo = src.parent.parent / row["image"]
             shutil.copyfile(photo, media / name)
             conn.execute(
                 "INSERT INTO items (sku, name, category, price_cents, condition, description, badge, image, ship, "
                 "status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'live', ?, ?)",
-                (row["sku"], row["name"], row["category"], row["price_cents"], row["condition"],
+                (sku, row["name"], row["category"], row["price_cents"], row["condition"],
                  row["description"], row["badge"], f"/media/items/{name}", int(row["ship"]), stamp, stamp),
             )
             added += 1

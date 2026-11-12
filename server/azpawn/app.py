@@ -27,7 +27,7 @@ from .security import (
 )
 
 # The storefront files served at the site root; nothing else in the repository is.
-SITE_FILES = ("index.html", "owner.html", "app.js", "owner.js", "styles.css", "owner.css")
+SITE_FILES = ("index.html", "owner.html", "app.js", "owner.js", "styles.css", "owner.css", "inventory/hero.jpg")
 # Every state-changing API call must carry this header. Browsers will not add a
 # custom header to a cross-site request without a CORS preflight, which this
 # server never grants, so a forged form on another site cannot act as a user.
