@@ -2,6 +2,7 @@
 
     python -m azpawn.manage add-staff <username>
     python -m azpawn.manage seed-demo
+    python -m azpawn.manage import-inventory [--file inventory/inventory.json]
     python -m azpawn.manage serve --port 8080
 """
 from __future__ import annotations
@@ -105,6 +106,40 @@ def seed_demo(args: argparse.Namespace) -> int:
     return 0
 
 
+def import_inventory(args: argparse.Namespace) -> int:
+    """Load the real shop inventory (inventory/inventory.json) and copy its photos into the media folder."""
+    import json
+    import shutil
+
+    src = Path(args.file).resolve()
+    rows = json.loads(src.read_text(encoding="utf-8"))
+    media = Path(args.data_dir).resolve() / "media" / "items"
+    media.mkdir(parents=True, exist_ok=True)
+    path = _db_path(args)
+    db.init(path)
+    conn = db.connect(path)
+    added = 0
+    try:
+        stamp = iso(utcnow())
+        for row in rows:
+            if conn.execute("SELECT 1 FROM items WHERE sku = ?", (row["sku"],)).fetchone():
+                continue
+            photo = src.parent.parent / row["image"]
+            name = f"inv-{row['key']}.jpg"
+            shutil.copyfile(photo, media / name)
+            conn.execute(
+                "INSERT INTO items (sku, name, category, price_cents, condition, description, badge, image, ship, "
+                "status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'live', ?, ?)",
+                (row["sku"], row["name"], row["category"], row["price_cents"], row["condition"],
+                 row["description"], row["badge"], f"/media/items/{name}", int(row["ship"]), stamp, stamp),
+            )
+            added += 1
+    finally:
+        conn.close()
+    print(f"Imported {added} items ({len(rows) - added} already present).")
+    return 0
+
+
 def serve(args: argparse.Namespace) -> int:
     import uvicorn
 
@@ -120,11 +155,13 @@ def main(argv: list[str] | None = None) -> int:
     staff = commands.add_parser("add-staff", help="create a staff login (or reset its password)")
     staff.add_argument("username")
     commands.add_parser("seed-demo", help="load the presentation inventory into an empty store")
+    imp = commands.add_parser("import-inventory", help="load the real inventory JSON and its photos")
+    imp.add_argument("--file", default="inventory/inventory.json")
     run = commands.add_parser("serve", help="run the web server")
     run.add_argument("--host", default="127.0.0.1")
     run.add_argument("--port", type=int, default=8080)
     args = parser.parse_args(argv)
-    return {"add-staff": add_staff, "seed-demo": seed_demo, "serve": serve}[args.command](args)
+    return {"add-staff": add_staff, "seed-demo": seed_demo, "import-inventory": import_inventory, "serve": serve}[args.command](args)
 
 
 if __name__ == "__main__":
