@@ -1,6 +1,6 @@
 # Inventory review sheet
 
-Generated from the owner's phone photos. **Price source** values: `tag` = price tag visible in photo, `shelf sign` = shelf sign visible, `shared price` = same price applied to identical items, `market value` = no price visible, estimated from current market value (REVIEW THESE). Karat, weight and authenticity are never stated unless visible.
+Generated from the owner's phone photos. **Price source** values: `owner stated` = owner said all games are $15, `tag` = price tag visible in photo, `shelf sign` = shelf sign visible, `shared price` = same price applied to identical items, `market value` = no price visible, estimated from current market value (REVIEW THESE). Karat, weight and authenticity are never stated unless visible.
 
 | SKU | Listing | Category | Price | Price source | Notes |
 |---|---|---|---|---|---|
@@ -111,106 +111,106 @@ Generated from the owner's phone photos. **Price source** values: `tag` = price 
 | AZ-JWL-1105 | Purple-stone bracelet | Jewelry | $120.00 | market value | Market-value estimate (no tag). Photo shows the bracelet in two halves (left half on top, right half below) because it was shot lying flat in a long tray; best re-shot close up. Source 846ad37a. |
 | AZ-JWL-1106 | Oval-link two-tone bracelet | Jewelry | $110.00 | market value | Market-value estimate (no tag). Photo shows the bracelet in two halves (left half on top, right half below) because it was shot lying flat in a long tray; best re-shot close up. Source 846ad37a. |
 | AZ-JWL-1107 | Flat herringbone chains (pair) | Jewelry | $75.00 | market value | Market-value estimate (no tag). Photo shows the bracelet in two halves (left half on top, right half below) because it was shot lying flat in a long tray; best re-shot close up. Source 846ad37a. |
-| AZ-GAM-1001 | Space Chimps (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source 0dee04c5. |
-| AZ-GAM-1002 | Zubo (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Title read at low confidence from the label art. Source 0dee04c5. |
-| AZ-GAM-1003 | Bakugan Battle Brawlers (red) (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Same title appears in more than one photo (may be duplicate copies); grouped as one listing. Source b38aacf4. |
-| AZ-GAM-1004 | The Biggest Loser (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Same title appears in more than one photo (may be duplicate copies); grouped as one listing. Source 0dee04c5. |
-| AZ-GAM-1005 | Big Brain Academy (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Same title appears in more than one photo (may be duplicate copies); grouped as one listing. Source c0dc077d. |
-| AZ-GAM-1006 | Imagine: Teacher (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Same title appears in more than one photo (may be duplicate copies); grouped as one listing. Source 28fa9c28. |
-| AZ-GAM-1007 | Petz Fashion Dogz & Catz (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source 28fa9c28. |
-| AZ-GAM-1008 | Jonas (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Same title appears in more than one photo (may be duplicate copies); grouped as one listing. Source dfc18076. |
-| AZ-GAM-1009 | Jillian Michaels Fitness Ultimatum 2010 (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source 28fa9c28. |
-| AZ-GAM-1010 | Hannah Montana (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source 28fa9c28. |
-| AZ-GAM-1011 | Zenses (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source 28fa9c28. |
-| AZ-GAM-1012 | America's Test Kitchen: Let's Get Cooking (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source 28fa9c28. |
-| AZ-GAM-1013 | Brain Age 2: More Training in Minutes a Day (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Same title appears in more than one photo (may be duplicate copies); grouped as one listing. Source c0dc077d. |
-| AZ-GAM-1014 | Battle of Giants: Dinosaurs (Nintendo DS) | Gaming | $14.99 | tag | Price from the sticker on the cartridge. Source 82efb76f. |
-| AZ-GAM-1015 | Kung Zhu (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Title read at low confidence from the label art. Source 82efb76f. |
-| AZ-GAM-1016 | Zoo Tycoon DS (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source 82efb76f. |
-| AZ-GAM-1017 | Activision DS game (title not legible) (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source 82efb76f. |
-| AZ-GAM-1018 | Wipeout: The Game (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source 82efb76f. |
-| AZ-GAM-1019 | Steel Diver (Nintendo 3DS cartridge) (Nintendo 3DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source 82efb76f. |
-| AZ-GAM-1020 | Over the Hedge (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source 82efb76f. |
-| AZ-GAM-1021 | Flash Focus: Vision Training in Minutes a Day (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source b38aacf4. |
-| AZ-GAM-1022 | Ener-G Dance Squad (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Title read at low confidence from the label art. Source b38aacf4. |
-| AZ-GAM-1023 | Chronicles of Mystery: The Secret Tree of Life (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source b38aacf4. |
-| AZ-GAM-1024 | My Chinese Coach (Nintendo DS) | Gaming | $9.99 | tag | Price from the sticker on the cartridge. Source b38aacf4. |
-| AZ-GAM-1025 | Horsez (Nintendo DS) | Gaming | $9.99 | tag | Price from the sticker on the cartridge. Title read at low confidence from the label art. Source c0dc077d. |
-| AZ-GAM-1026 | Rafa Nadal Tennis (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source c0dc077d. |
-| AZ-GAM-1027 | Battle of Giants: Dragons (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source c4069ba4. |
-| AZ-GAM-1028 | Drawn to Life (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source c4069ba4. |
-| AZ-GAM-1029 | Bakugan Battle Brawlers (blue) (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source c4069ba4. |
-| AZ-GAM-1030 | Ben 10 Alien Force: Cosmic Destruction (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source c4069ba4. |
-| AZ-GAM-1031 | Meteos: Disney Magic (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source c4069ba4. |
-| AZ-GAM-1032 | The ABC Murders (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source c4069ba4. |
-| AZ-GAM-1033 | Brain Age: Train Your Brain in Minutes a Day (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Same title appears in more than one photo (may be duplicate copies); grouped as one listing. Source dfc18076. |
-| AZ-GAM-1034 | Big League Sports: Summer (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source dfc18076. |
-| AZ-GAM-1035 | Hamsterz Life (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source dfc18076. |
-| AZ-GAM-1036 | Imagine: Fashion Designer (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source dfc18076. |
-| AZ-GAM-1037 | Imagine: Fashion Designer World Tour (Nintendo DS) | Gaming | $15.00 | shelf sign | Price from the shelf sign "DS Games $15.00"; no sticker on this cartridge. Source dfc18076. |
-| AZ-GAM-1038 | Rapala Pro Bass Fishing (PlayStation 3) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. Source 305ee2c5. |
-| AZ-GAM-1039 | Diablo III (PlayStation 3) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. A sticker is visible but not readable. Source 305ee2c5. |
-| AZ-GAM-1040 | Killzone 2 (PlayStation 3) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. Source 305ee2c5. |
-| AZ-GAM-1041 | Call of Duty: Black Ops (Greatest Hits) (PlayStation 3) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. Source 3970a5c1. |
-| AZ-GAM-1042 | Call of Duty: Black Ops III (PlayStation 3) | Gaming | $7.99 | tag | Price from the shop sticker on the case. Source 3970a5c1. |
-| AZ-GAM-1043 | Grand Theft Auto V (PlayStation 3) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. Source 3970a5c1. |
-| AZ-GAM-1044 | Call of Duty 4: Modern Warfare (Game of the Year Edition) (PlayStation 3) | Gaming | $5.99 | tag | Price from the shop sticker on the case. Source 3970a5c1. |
-| AZ-GAM-1045 | Madden NFL 11 (PlayStation 3) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. Source 48a79f0c. |
-| AZ-GAM-1046 | Brink (PlayStation 3) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. A sticker is visible but not readable. Source 48a79f0c. |
-| AZ-GAM-1047 | Tom Clancy's H.A.W.X (PlayStation 3) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. Source 48a79f0c. |
-| AZ-GAM-1048 | Sports Champions (PlayStation 3) | Gaming | $15.00 | tag | Price from the shop sticker on the case. Source 48a79f0c. |
-| AZ-GAM-1049 | Rock Band 2 (PlayStation 3) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. Source 64ead1df. |
-| AZ-GAM-1050 | Uncharted: Drake's Fortune (Greatest Hits) (PlayStation 3) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. Source 64ead1df. |
-| AZ-GAM-1051 | Rock Revolution (PlayStation 3) | Gaming | $5.99 | tag | Price from the shop sticker on the case. Source 64ead1df. |
-| AZ-GAM-1052 | Call of Duty: Modern Warfare 2 (PlayStation 3) | Gaming | $5.99 | tag | Price from the shop sticker on the case. Source 64ead1df. |
-| AZ-GAM-1053 | Madden NFL 07 (PlayStation 3) | Gaming | $15.00 | tag | Price from the shop sticker on the case. Source 80f2eb6c. |
-| AZ-GAM-1054 | Madden NFL 09 (PlayStation 3) | Gaming | $10.00 | tag | Price from the shop sticker on the case. Source 80f2eb6c. |
-| AZ-GAM-1055 | Madden NFL 10 (PlayStation 3) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. A sticker is visible but not readable. Source 80f2eb6c. |
-| AZ-GAM-1056 | Rock Band (PlayStation 3) | Gaming | $25.00 | tag | Price from the shop sticker on the case. Source 80f2eb6c. |
-| AZ-GAM-1057 | Kane & Lynch 2: Dog Days (PlayStation 3) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. A sticker is visible but not readable. Source a1bfb61d. |
-| AZ-GAM-1058 | Two Worlds II (PlayStation 3) | Gaming | $15.00 | tag | Price from the shop sticker on the case. Source a1bfb61d. |
-| AZ-GAM-1059 | NCAA Football 08 (PlayStation 3) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. Source a1bfb61d. |
-| AZ-GAM-1060 | MLB 08 The Show (PlayStation 3) | Gaming | $15.00 | tag | Price from the shop sticker on the case. Same game also appears in photo 305ee2c5; grouped as one listing. Source a1bfb61d. |
-| AZ-GAM-1061 | Guitar Hero: Aerosmith (PlayStation 3) | Gaming | $15.00 | tag | Price from the shop sticker on the case. Source a1bfb61d. |
-| AZ-GAM-1062 | Tiger Woods PGA Tour 07 (PlayStation 3) | Gaming | $15.00 | tag | Price from the shop sticker on the case. Source a956e48a. |
-| AZ-GAM-1063 | NCAA Football 09 (PlayStation 3) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. A sticker is visible but not readable. Source a956e48a. |
-| AZ-GAM-1064 | MLB 07 The Show (PlayStation 3) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. A second Mets-cover copy appears in photo 9fc58b4b with a partly legible sticker (looks like $10); grouped as one listing. Source a956e48a. |
-| AZ-GAM-1065 | MLB 11 The Show (PlayStation 3) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. Source a956e48a. |
-| AZ-GAM-1066 | NHL 10 (PlayStation 3) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. A sticker is visible but not readable. Source 8c67c37d. |
-| AZ-GAM-1067 | MLB 12 The Show (PlayStation 3) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. A sticker is visible but not readable. Source 8c67c37d. |
-| AZ-GAM-1068 | 2010 FIFA World Cup South Africa (PlayStation 3) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. Source 9fc58b4b. |
-| AZ-GAM-1069 | Madden NFL 15 (PlayStation 3) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. Source d8db38bd. |
-| AZ-GAM-1070 | Uncharted 3: Drake's Deception (PlayStation 3) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. A sticker is visible but not readable. Source d8db38bd. |
-| AZ-GAM-1071 | DJ Hero (Wii) | Gaming | $15.00 | tag | Price from the shop sticker on the case. Source 4ee7685a. |
-| AZ-GAM-1072 | LEGO Star Wars: The Complete Saga (Wii) | Gaming | $10.00 | tag | Price from the shop sticker on the case. Source 4ee7685a. |
-| AZ-GAM-1073 | My Fitness Coach (Wii) | Gaming | $15.00 | tag | Price from the shop sticker on the case. Source 4ee7685a. |
-| AZ-GAM-1074 | Kawasaki Jet Ski (Wii) | Gaming | $10.00 | tag | Price from the shop sticker on the case. Source 4ee7685a. |
-| AZ-GAM-1075 | Big Beach Sports (Wii) | Gaming | $10.00 | tag | Price from the shop sticker on the case. Source 2621e369. |
-| AZ-GAM-1076 | DiRT 2 (Wii) | Gaming | $10.00 | tag | Price from the shop sticker on the case. Source 2621e369. |
-| AZ-GAM-1077 | Mountain Sports (Wii) | Gaming | $10.00 | tag | Price from the shop sticker on the case. Source a1a84313. |
-| AZ-GAM-1078 | Wii Play (Wii) | Gaming | $10.00 | tag | Price from the shop sticker on the case. Source a1a84313. |
-| AZ-GAM-1079 | All-Star Baseball 2004 (Nintendo GameCube) | Gaming | $10.00 | tag | Price from the shop sticker on the case. Case also carries an outside sticker that looks like $24.99 (appears to be another store). Please confirm which price applies. Source a1a84313. |
-| AZ-GAM-1080 | World Party Games (Wii) | Gaming | $10.00 | tag | Price from the shop sticker on the case. Source a1a84313. |
-| AZ-GAM-1081 | Major League Baseball 2K9 (Wii) | Gaming | $10.00 | tag | Price from the shop sticker on the case. Source a1a84313. |
-| AZ-GAM-1082 | Cabela's Dangerous Hunts 2009 (Wii) | Gaming | $10.00 | shared price | Sticker only partly legible; priced to match the other Wii stickers in the same photos ($10.00). Source a1a84313. |
-| AZ-GAM-1083 | Rock Band 2 (Wii) | Gaming | $15.00 | tag | Price from the shop sticker on the case. Source de5c0efc. |
-| AZ-GAM-1084 | Jillian Michaels Fitness Ultimatum 2009 (Wii) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. Source de5c0efc. |
-| AZ-GAM-1085 | Rock Band (Wii) | Gaming | $15.00 | tag | Price from the shop sticker on the case. Source de5c0efc. |
-| AZ-GAM-1086 | Madden NFL 08 (Wii) | Gaming | $10.00 | tag | Price from the shop sticker on the case. Source de5c0efc. |
-| AZ-GAM-1087 | Disney Sing It: Family Hits (Wii) | Gaming | $10.00 | tag | Price from the shop sticker on the case. Source 9b0a6cf7. |
-| AZ-GAM-1088 | Ultimate Band (Wii) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. Source 9b0a6cf7. |
-| AZ-GAM-1089 | NCIS (Wii) | Gaming | $15.00 | tag | Price from the shop sticker on the case. Source 9b0a6cf7. |
-| AZ-GAM-1090 | Game Party (Wii) | Gaming | $10.00 | tag | Price from the shop sticker on the case. Source f5769678. |
-| AZ-GAM-1091 | Top Spin 3 (Wii) | Gaming | $10.00 | market value | No legible price sticker; market-value estimate for a used copy. Source f5769678. |
-| AZ-GAM-1092 | Cars Toon: Mater's Tall Tales (Wii) | Gaming | $10.00 | tag | Price from the shop sticker on the case. Source f5769678. |
-| AZ-GAM-1093 | Madden NFL (SNES, year not legible) (Super Nintendo) | Gaming | $12.00 | market value | No tag; market-value estimate for a loose cartridge. Source 715e8516. |
-| AZ-GAM-1094 | Football game (SNES, title partly legible) (Super Nintendo) | Gaming | $12.00 | market value | No tag; market-value estimate for a loose cartridge. Source 715e8516. |
-| AZ-GAM-1095 | Troy Aikman NFL Football (Super Nintendo) | Gaming | $12.00 | market value | No tag; market-value estimate for a loose cartridge. Handwritten name on the shell reads "Bobby Richardson". Source 715e8516. |
-| AZ-GAM-1096 | John Madden Football (Super Nintendo) | Gaming | $12.00 | market value | No tag; market-value estimate for a loose cartridge. Source 715e8516. |
-| AZ-GAM-1097 | Cal Ripken Jr. Baseball (Super Nintendo) | Gaming | $12.00 | market value | No tag; market-value estimate for a loose cartridge. Source 715e8516. |
-| AZ-GAM-1098 | Super Caesars Palace (Super Nintendo) | Gaming | $12.00 | market value | No tag; market-value estimate for a loose cartridge. Source 715e8516. |
-| AZ-GAM-1099 | NCAA Basketball (Super Nintendo) | Gaming | $12.00 | market value | No tag; market-value estimate for a loose cartridge. Source 715e8516. |
-| AZ-GAM-1100 | NHLPA Hockey '93 (Super Nintendo) | Gaming | $12.00 | market value | No tag; market-value estimate for a loose cartridge. Source 715e8516. |
+| AZ-GAM-1001 | Space Chimps (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1002 | Zubo (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1003 | Bakugan Battle Brawlers (red) (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1004 | The Biggest Loser (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1005 | Big Brain Academy (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1006 | Imagine: Teacher (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1007 | Petz Fashion Dogz & Catz (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1008 | Jonas (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1009 | Jillian Michaels Fitness Ultimatum 2010 (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1010 | Hannah Montana (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1011 | Zenses (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1012 | America's Test Kitchen: Let's Get Cooking (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1013 | Brain Age 2: More Training in Minutes a Day (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1014 | Battle of Giants: Dinosaurs (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1015 | Kung Zhu (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1016 | Zoo Tycoon DS (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1017 | Activision DS game (title not legible) (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1018 | Wipeout: The Game (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1019 | Steel Diver (Nintendo 3DS cartridge) (Nintendo 3DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1020 | Over the Hedge (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1021 | Flash Focus: Vision Training in Minutes a Day (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1022 | Ener-G Dance Squad (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1023 | Chronicles of Mystery: The Secret Tree of Life (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1024 | My Chinese Coach (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1025 | Horsez (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1026 | Rafa Nadal Tennis (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1027 | Battle of Giants: Dragons (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1028 | Drawn to Life (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1029 | Bakugan Battle Brawlers (blue) (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1030 | Ben 10 Alien Force: Cosmic Destruction (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1031 | Meteos: Disney Magic (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1032 | The ABC Murders (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1033 | Brain Age: Train Your Brain in Minutes a Day (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1034 | Big League Sports: Summer (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1035 | Hamsterz Life (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1036 | Imagine: Fashion Designer (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1037 | Imagine: Fashion Designer World Tour (Nintendo DS) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1038 | Rapala Pro Bass Fishing (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1039 | Diablo III (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1040 | Killzone 2 (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1041 | Call of Duty: Black Ops (Greatest Hits) (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1042 | Call of Duty: Black Ops III (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1043 | Grand Theft Auto V (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1044 | Call of Duty 4: Modern Warfare (Game of the Year Edition) (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1045 | Madden NFL 11 (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1046 | Brink (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1047 | Tom Clancy's H.A.W.X (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1048 | Sports Champions (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1049 | Rock Band 2 (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1050 | Uncharted: Drake's Fortune (Greatest Hits) (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1051 | Rock Revolution (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1052 | Call of Duty: Modern Warfare 2 (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1053 | Madden NFL 07 (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1054 | Madden NFL 09 (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1055 | Madden NFL 10 (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1056 | Rock Band (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1057 | Kane & Lynch 2: Dog Days (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1058 | Two Worlds II (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1059 | NCAA Football 08 (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1060 | MLB 08 The Show (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1061 | Guitar Hero: Aerosmith (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1062 | Tiger Woods PGA Tour 07 (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1063 | NCAA Football 09 (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1064 | MLB 07 The Show (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1065 | MLB 11 The Show (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1066 | NHL 10 (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1067 | MLB 12 The Show (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1068 | 2010 FIFA World Cup South Africa (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1069 | Madden NFL 15 (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1070 | Uncharted 3: Drake's Deception (PlayStation 3) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1071 | DJ Hero (Wii) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1072 | LEGO Star Wars: The Complete Saga (Wii) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1073 | My Fitness Coach (Wii) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1074 | Kawasaki Jet Ski (Wii) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1075 | Big Beach Sports (Wii) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1076 | DiRT 2 (Wii) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1077 | Mountain Sports (Wii) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1078 | Wii Play (Wii) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1079 | All-Star Baseball 2004 (Nintendo GameCube) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1080 | World Party Games (Wii) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1081 | Major League Baseball 2K9 (Wii) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1082 | Cabela's Dangerous Hunts 2009 (Wii) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1083 | Rock Band 2 (Wii) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1084 | Jillian Michaels Fitness Ultimatum 2009 (Wii) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1085 | Rock Band (Wii) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1086 | Madden NFL 08 (Wii) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1087 | Disney Sing It: Family Hits (Wii) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1088 | Ultimate Band (Wii) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1089 | NCIS (Wii) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1090 | Game Party (Wii) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1091 | Top Spin 3 (Wii) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1092 | Cars Toon: Mater's Tall Tales (Wii) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1093 | Madden NFL (SNES, year not legible) (Super Nintendo) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1094 | Football game (SNES, title partly legible) (Super Nintendo) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1095 | Troy Aikman NFL Football (Super Nintendo) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1096 | John Madden Football (Super Nintendo) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1097 | Cal Ripken Jr. Baseball (Super Nintendo) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1098 | Super Caesars Palace (Super Nintendo) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1099 | NCAA Basketball (Super Nintendo) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
+| AZ-GAM-1100 | NHLPA Hockey '93 (Super Nintendo) | Gaming | $15.00 | owner stated | Owner stated all games are $15 each. |
 | AZ-GAM-1101 | Xbox Series X Console | Gaming | $385.00 | tag | Price from the shop tag, confirmed by owner ($385). Source 768d75af. |
 | AZ-GAM-1102 | PlayStation 5 Console (disc edition) | Gaming | $385.00 | tag | A close-up tag in photo d24a9cc1 reads $385.00 (item description "PS5 GAME"); I assumed it belongs to this console. Please confirm. Source 62d63b96. |
 | AZ-GAM-1103 | PlayStation 5 Consoles with DualSense Controllers | Gaming | $395.00 | tag | Tag on the right console is only partly legible (looks like $395.00). Please confirm; this may be the price of one console, not the group. Source 246806ce. |
@@ -240,9 +240,8 @@ Generated from the owner's phone photos. **Price source** values: `tag` = price 
 - Bikes / market value: 1
 - Collectibles / market value: 7
 - Electronics / market value: 2
-- Gaming / market value: 38
-- Gaming / shared price: 1
-- Gaming / shelf sign: 34
-- Gaming / tag: 38
+- Gaming / market value: 6
+- Gaming / owner stated: 100
+- Gaming / tag: 5
 - HVAC / market value: 2
 - Jewelry / market value: 107
