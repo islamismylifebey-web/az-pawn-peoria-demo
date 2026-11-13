@@ -27,7 +27,7 @@ from .security import (
 )
 
 # The storefront files served at the site root; nothing else in the repository is.
-SITE_FILES = ("index.html", "owner.html", "app.js", "owner.js", "styles.css", "owner.css")
+SITE_FILES = ("index.html", "owner.html", "app.js", "owner.js", "styles.css", "owner.css", "inventory/hero.jpg")
 # Every state-changing API call must carry this header. Browsers will not add a
 # custom header to a cross-site request without a CORS preflight, which this
 # server never grants, so a forged form on another site cannot act as a user.
@@ -35,7 +35,7 @@ REQUEST_HEADER = "x-az-request"
 STAFF_COOKIE = "az_staff"
 BIDDER_COOKIE = "az_bidder"
 MAX_PHOTOS = 6
-CATEGORIES = ("Jewelry", "Electronics", "Tools", "Gaming", "Music", "Collectibles", "Other")
+CATEGORIES = ("Jewelry", "Electronics", "Tools", "Gaming", "Music", "Collectibles", "Bikes", "HVAC", "Other")
 
 
 def _cents(value: float) -> int:
@@ -156,7 +156,7 @@ def _staff_item_view(row: sqlite3.Row) -> dict:
 
 def _next_sku(conn: sqlite3.Connection, category: str) -> str:
     prefix = {"Jewelry": "JWL", "Electronics": "ELC", "Tools": "TOL", "Gaming": "GAM", "Music": "MUS",
-              "Collectibles": "COL"}.get(category, "OTH")
+              "Collectibles": "COL", "Bikes": "BKE", "HVAC": "HVC"}.get(category, "OTH")
     count = conn.execute("SELECT COUNT(*) FROM items").fetchone()[0]
     while True:
         count += 1
