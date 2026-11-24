@@ -61,7 +61,7 @@ await post({ v: 1, at, items: [{ sku: a.sku, dynamic_cents: a.price_cents + 500 
 r = await staff("/api/staff/login", { method: "POST", json: { username: "smoketest", password: "smoke-test-password" } }); assert.equal(r.status, 200);
 r = await staff(`/api/staff/items/${a.id}`, { method: "PATCH", json: { price: 77.77 } }); assert.equal(r.status, 200);
 assert.equal(r.data.price_locked, true); assert.equal(r.data.price_source, "locked");
-await post({ v: 1, items: [{ sku: a.sku, dynamic_cents: 1 }], n: 2 });
+await post({ v: 1, items: [{ sku: a.sku, dynamic_cents: 1 }], n: Date.now() });
 items = await pub(); assert.equal(get(a.sku).price_cents, 7777, "locked price beats dynamic");
 r = await staff(`/api/staff/items/${a.id}`, { method: "PATCH", json: { locked: false } });
 items = await pub(); assert.equal(get(a.sku).price_cents, 1, "unlocked shows dynamic again");
@@ -72,7 +72,7 @@ r = await fetch(BASE + "/api/orders", { method: "POST", headers: { "x-az-request
 const o = await r.json(); assert.equal(r.status, 201, JSON.stringify(o)); assert.equal(o.total_cents, 12345, "order uses dynamic price");
 
 // clearing
-await post({ v: 1, items: [{ sku: a.sku, dynamic_cents: null }] });
+await post({ v: 1, items: [{ sku: a.sku, dynamic_cents: null }], n: Date.now() });
 items = await pub(); assert.equal(get(a.sku).price_cents, 7777, "cleared dynamic falls back to the set price");
 
 r = await staff("/api/staff/feed"); assert.equal(r.status, 200); assert.ok(r.data.recent.length >= 3);

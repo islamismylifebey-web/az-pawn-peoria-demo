@@ -49,19 +49,62 @@ function guard(){if(!live){showToast("Demo only — sign in on the live Command 
 function switchTab(id){
  document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.id===id));
  document.querySelectorAll(".nav").forEach(x=>x.classList.toggle("active",x.dataset.tab===id));
- const label={overview:"Overview",orders:"Orders",inquiries:"Sell / Pawn Inquiries",meetings:"Video Meetings",inventory:"Inventory",auctions:"Auctions"};
+ const label={overview:"Overview",orders:"Orders",inquiries:"Sell / Pawn Inquiries",meetings:"Video Meetings",inventory:"Inventory",auctions:"Auctions",staff:"Staff"};
  $("#pageTitle").textContent=label[id]||"Owner Command Center";
 }
 document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
 document.querySelectorAll("[data-tab-jump]").forEach(b=>b.onclick=()=>switchTab(b.dataset.tabJump));
 
 async function load(){
- if(!live){Object.assign(state,structuredClone(DEMO));return}
+ if(!live){Object.assign(state,structuredClone(DEMO));state.me={role:"owner",can_price:true};state.employees=[];return}
+ const me=await api("/api/staff/me");
  const [summary,orders,inquiries,items,auctions,bidders]=await Promise.all(
   ["summary","orders","inquiries","items","auctions","bidders"].map(name=>api(`/api/staff/${name}`)));
- Object.assign(state,{summary,orders,inquiries,items,auctions,bidders});
+ const employees=me.role==="owner"?await api("/api/staff/employees"):[];
+ Object.assign(state,{me,summary,orders,inquiries,items,auctions,bidders,employees});
 }
-function renderAll(){renderOverview();renderOrders();renderInquiries();renderMeetings();renderInventory();renderAuctions();renderBidders()}
+function renderAll(){renderOverview();renderOrders();renderInquiries();renderMeetings();renderInventory();renderAuctions();renderBidders();renderStaff()}
+
+// ---- employees and printed sign-in slips (owner only)
+const isOwner=()=>state.me&&state.me.role==="owner";
+const canPrice=()=>state.me&&state.me.can_price;
+function renderStaff(){
+ $("#staffNav").hidden=!isOwner();
+ if(!isOwner())return;
+ $("#staffTable").innerHTML=(state.employees||[]).map(e=>{
+  const acts=e.active?[`<button data-slip="${e.id}">Print slip</button>`,`<button class="secondary" data-cp="${e.id}">${e.can_price?"Stop price changes":"Allow price changes"}</button>`,`<button class="secondary" data-remove="${e.id}">Remove</button>`]:[];
+  const slip=e.last_slip_at?`${new Date(e.last_slip_at).toLocaleString()}<small>${e.slip_used_at?"used "+new Date(e.slip_used_at).toLocaleString():"not used yet"}</small>`:"None yet";
+  return `<tr><td><strong>${esc(e.name)}</strong></td><td>${e.can_price?"Can change":"View only"}</td><td>${slip}</td><td><span class="status${e.active?"":" maroon"}">${e.active?"Active":"Removed"}</span></td><td class="row-actions">${acts.join("")}</td></tr>`}).join("")||'<tr><td colspan="5" class="muted">No employees yet.</td></tr>';
+ document.querySelectorAll("[data-slip]").forEach(b=>b.onclick=()=>printSlip(+b.dataset.slip));
+ document.querySelectorAll("[data-cp]").forEach(b=>b.onclick=async()=>{
+  const e=state.employees.find(x=>x.id===+b.dataset.cp);
+  try{await api(`/api/staff/employees/${e.id}`,{method:"PATCH",json:{can_price:!e.can_price}});showToast("Saved");await refresh()}catch(err){showToast(err.message)}});
+ document.querySelectorAll("[data-remove]").forEach(b=>b.onclick=async()=>{
+  const e=state.employees.find(x=>x.id===+b.dataset.remove);
+  if(!confirm(`Remove ${e.name}? They are signed out on every device right away.`))return;
+  try{await api(`/api/staff/employees/${e.id}/remove`,{method:"POST"});showToast(`${e.name} removed`);await refresh()}catch(err){showToast(err.message)}});
+}
+async function printSlip(id){
+ if(!guard())return;
+ try{
+  const s=await api(`/api/staff/employees/${id}/slip`,{method:"POST"});
+  const qr=qrcode(0,"M");qr.addData(s.url);qr.make();
+  const exp=new Date(s.expires_at).toLocaleString([], {weekday:"short",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"});
+  $("#slipPrint").innerHTML=`<h2>A-Z Jewelry &amp; Swap</h2><p>Command Center sign-in</p><div class="who">${esc(s.name)}</div>${qr.createSvgTag({cellSize:4,margin:2,scalable:true})}<p>Scan with your phone camera to sign in.</p><p><b>Works once. Expires ${esc(exp)}.</b></p><small>Keep this slip private. Built by GALOR WebWorks.</small>`;
+  document.body.classList.add("printing-slip");
+  const done=()=>{document.body.classList.remove("printing-slip");$("#slipPrint").innerHTML="";window.removeEventListener("afterprint",done)};
+  window.addEventListener("afterprint",done);
+  window.print();
+  setTimeout(done,60000);
+  await refresh();
+ }catch(err){showToast(err.message)}
+}
+$("#employeeForm").onsubmit=async e=>{
+ e.preventDefault();if(!guard())return;
+ const f=new FormData(e.target);
+ try{const emp=await api("/api/staff/employees",{method:"POST",json:{name:f.get("name"),can_price:f.get("can_price")==="on"}});e.target.reset();await refresh();await printSlip(emp.id)}
+ catch(err){showToast(err.message)}
+};
 async function refresh(){try{await load();renderAll()}catch(err){showToast(err.message)}}
 
 const KIND={sell:"Sell",pawn:"Pawn inquiry",video:"Video request",custom:"Custom jewelry order",wanted:"Looking for"};
@@ -135,7 +178,7 @@ function renderInventory(){
   const actions=[];
   if(i.status==="draft"||i.status==="hidden")actions.push(`<button data-item="${i.id}" data-set="live">Publish</button>`);
   if(i.status==="live")actions.push(`<button data-item="${i.id}" data-set="sold">Sold in store</button>`,`<button class="secondary" data-item="${i.id}" data-set="hidden">Hide</button>`,`<button class="secondary" data-auction-item="${i.id}">Auction</button>`);
-  if(i.status!=="auction"&&i.status!=="sold")actions.push(`<button class="secondary" data-price="${i.id}">Price</button>`,`<button class="secondary" data-lock="${i.id}">${i.price_locked?"Unlock price":"Lock price"}</button>`);
+  if(i.status!=="auction"&&i.status!=="sold"&&canPrice())actions.push(`<button class="secondary" data-price="${i.id}">Price</button>`,`<button class="secondary" data-lock="${i.id}">${i.price_locked?"Unlock price":"Lock price"}</button>`);
   const aging=i.status==="live"&&ageDays(i.created_at)>85;
   return `<tr><td><strong>${esc(i.sku)}</strong></td><td>${esc(i.name)}${i.available_on?`<small>for sale from ${esc(i.available_on)}</small>`:""}</td><td>${priceCell(i)}</td><td>${ageDays(i.created_at)} days${aging?' <span class="status maroon">aging</span>':""}</td><td><span class="status">${STATUS_LABEL[i.status]||esc(i.status)}</span></td><td class="row-actions">${actions.join("")}</td></tr>`}).join("")||'<tr><td colspan="6" class="muted">No items yet. Add the first one above.</td></tr>';
  document.querySelectorAll("[data-set]").forEach(b=>b.onclick=async()=>{

@@ -29,9 +29,23 @@ CREATE TABLE IF NOT EXISTS items (
 CREATE TABLE IF NOT EXISTS staff (
     id INTEGER PRIMARY KEY,
     username TEXT NOT NULL UNIQUE,
-    password_hash TEXT NOT NULL,
-    created_at TEXT NOT NULL
+    password_hash TEXT NOT NULL,            -- '!' for employees: they sign in only with a printed slip
+    created_at TEXT NOT NULL,
+    role TEXT NOT NULL DEFAULT 'owner',     -- 'owner' (made with tools/add-staff.mjs) or 'employee'
+    display_name TEXT NOT NULL DEFAULT '',
+    can_price INTEGER NOT NULL DEFAULT 1,   -- employees may change prices and locks only if Gary allows it
+    revoked_at TEXT
 );
+
+-- One-time sign-in links printed on employee slips. Only a hash of the link is kept.
+CREATE TABLE IF NOT EXISTS staff_links (
+    token_hash TEXT PRIMARY KEY,
+    staff_id INTEGER NOT NULL REFERENCES staff (id),
+    created_at TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
+    used_at TEXT
+);
+CREATE INDEX IF NOT EXISTS staff_links_staff ON staff_links (staff_id);
 
 CREATE TABLE IF NOT EXISTS bidders (
     id INTEGER PRIMARY KEY,

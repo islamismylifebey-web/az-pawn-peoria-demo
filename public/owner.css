@@ -9,3 +9,6 @@
 .photo-row{display:flex;gap:8px;overflow:auto;margin:12px 0}.photo-row img{width:160px;height:120px;object-fit:cover;border-radius:4px}.auction-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px;font-size:13px;color:var(--muted)}.winner{color:var(--ink)}
 .panel-head input{padding:9px 11px;border:1px solid var(--line);border-radius:4px;min-width:220px}
 @media(max-width:900px){.item-form{grid-template-columns:1fr 1fr}}@media(max-width:600px){.item-form{grid-template-columns:1fr}.panel-head input{min-width:0;width:100%}}
+
+.slip-print{font-family:Inter,ui-sans-serif,system-ui,sans-serif;color:#000;text-align:center;padding:24px}.slip-print h2{font-family:Georgia,serif;font-size:26px;margin:0 0 4px}.slip-print .who{font-size:22px;font-weight:800;margin:14px 0 8px}.slip-print svg{width:62mm;height:62mm}.slip-print p{margin:8px 0;font-size:14px}.slip-print small{display:block;margin-top:14px;font-size:10px;color:#444}
+@media print{body.printing-slip>*:not(#slipPrint){display:none!important}body.printing-slip #slipPrint{display:block!important}@page{margin:12mm}}

@@ -31,6 +31,7 @@
         <button class="nav" data-tab="meetings">Video Meetings</button>
         <button class="nav" data-tab="inventory">Inventory</button>
         <button class="nav" data-tab="auctions">Auctions</button>
+        <button class="nav" data-tab="staff" id="staffNav" hidden>Staff</button>
       </nav>
       <a class="store-link" href="index.html">← Back to storefront</a>
     </aside>
@@ -158,10 +159,27 @@
           <div class="table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Joined</th><th>Status</th><th>Actions</th></tr></thead><tbody id="biddersTable"></tbody></table></div>
         </section>
       </section>
+      <section class="tab" id="staff">
+        <section class="panel">
+          <div class="panel-head"><div><span class="eyebrow">Employees</span><h2>Add an employee</h2></div></div>
+          <p class="muted">Add someone, then print their sign-in slip. They scan the code on the slip with their phone or the shop computer and they're signed in. No password. The slip works once, within 24 hours.</p>
+          <form class="item-form" id="employeeForm">
+            <label>Name<input name="name" required maxlength="60" placeholder="First name" /></label>
+            <label class="check"><input type="checkbox" name="can_price" /> Can change prices and locks</label>
+            <button type="submit">Add and print slip</button>
+          </form>
+        </section>
+        <section class="panel">
+          <div class="panel-head"><div><span class="eyebrow">Who can sign in</span><h2>Employees</h2></div></div>
+          <div class="table-wrap"><table><thead><tr><th>Name</th><th>Prices</th><th>Last slip</th><th>Status</th><th>Actions</th></tr></thead><tbody id="staffTable"></tbody></table></div>
+        </section>
+      </section>
     </main>
   </div>
 
+  <div class="slip-print" id="slipPrint" hidden></div>
   <div class="toast" id="toast"></div>
+  <script src="vendor/qrcode.js"></script>
   <script src="owner.js"></script>
 </body>
 </html>

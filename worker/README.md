@@ -33,6 +33,15 @@ node tools/add-staff.mjs <username>                        # the owner types the
 Stripe card holds switch on when Gary's secret key is added:
 `npx wrangler secret put AZ_STRIPE_SECRET_KEY` (typed by the owner, never pasted into chat).
 
+## Employees (printed sign-in slips)
+
+Gary's own login is made once with `node tools/add-staff.mjs <name>` (he types the password).
+In the Command Center, **Staff** lets him add an employee and print a sign-in slip: a QR code
+with a one-time link that works once within 24 hours. The employee scans it and that device
+stays signed in for 30 days. Employees can't add staff, and can change prices and locks only
+if Gary allows it. **Remove** signs them out everywhere at once. Setup once:
+`npx wrangler d1 execute az-jewelry-store --remote --file migrations/0003_employee_slips.sql`.
+
 ## Pledge's dynamic prices
 
 Pledge sends its dynamic prices to `/api/pledge/feed`, and every item shows that
@@ -45,5 +54,5 @@ Command Center (`/owner.html`), not in code. A price typed there is locked.
 
 ## Tests
 
-`npx wrangler dev --local` then `node test/smoke.mjs` (needs a local staff
+`npx wrangler dev --local` then `node test/smoke.mjs`, `node test/feed.mjs` and `node test/staff.mjs` (needs a local staff
 login `smoketest`, made with `node tools/add-staff.mjs smoketest --local`).

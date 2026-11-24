@@ -52,10 +52,10 @@ export async function verifyPassword(password, stored) {
 
 // ------------------------------------------------------------------ sessions
 const LIFETIME_H = { staff: 12, bidder: 30 * 24 };
-export async function createSession(db, kind, userId) {
+export async function createSession(db, kind, userId, hours = LIFETIME_H[kind]) {
   const token = b64url(crypto.getRandomValues(new Uint8Array(32)));
   await db.prepare("INSERT INTO sessions (token_hash, kind, user_id, expires_at) VALUES (?, ?, ?, ?)")
-    .bind(await sha256Hex(token), kind, userId, iso(addHours(new Date(), LIFETIME_H[kind]))).run();
+    .bind(await sha256Hex(token), kind, userId, iso(addHours(new Date(), hours))).run();
   return token;
 }
 export async function sessionUser(db, kind, token) {
@@ -76,8 +76,8 @@ export function cookies(request) {
   });
   return out;
 }
-export function setCookie(name, token, kind, secure = true) {
-  const maxAge = LIFETIME_H[kind] * 3600;
+export function setCookie(name, token, kind, secure = true, hours = LIFETIME_H[kind]) {
+  const maxAge = hours * 3600;
   return `${name}=${token}; Max-Age=${maxAge}; Path=/; HttpOnly; SameSite=Lax${secure ? "; Secure" : ""}`;
 }
 export const clearCookie = (name, secure = true) => `${name}=; Max-Age=0; Path=/; HttpOnly; SameSite=Lax${secure ? "; Secure" : ""}`;

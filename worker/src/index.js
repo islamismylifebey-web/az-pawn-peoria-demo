@@ -6,7 +6,7 @@
 import {
   HttpError, fail, json, iso, addHours, parseIso, shopToday, hashPassword, verifyPassword,
   createSession, sessionUser, endSession, cookies, setCookie, clearCookie, allow,
-  BadImage, savePhoto, stripeEnabled, stripe,
+  BadImage, savePhoto, stripeEnabled, stripe, randomHex, sha256Hex,
 } from "./lib.js";
 
 const STAFF_COOKIE = "az_staff";
@@ -137,10 +137,24 @@ function makeCtx(request, env) {
     async limit(action, count, windowSec) {
       if (!(await allow(env.DB, `${action}:${ip}`, count, windowSec))) fail(429, "Too many attempts. Please wait a few minutes and try again.");
     },
-    async staff() {
+    // Signed-in staff: Gary (owner) or an employee he signed in with a printed slip.
+    // A removed employee is signed out everywhere at once.
+    async staffRow() {
+      if (this._staff) return this._staff;
       const id = await sessionUser(env.DB, "staff", jar[STAFF_COOKIE]);
-      if (id === null) fail(401, "Please sign in.");
-      return id;
+      const row = id === null ? null : await env.DB.prepare("SELECT * FROM staff WHERE id = ?").bind(id).first();
+      if (!row || row.revoked_at) fail(401, "Please sign in.");
+      return (this._staff = row);
+    },
+    async staff() { return (await this.staffRow()).id; },
+    async owner() {
+      const row = await this.staffRow();
+      if (row.role !== "owner") fail(403, "Only the owner can do that.");
+      return row;
+    },
+    async canPrice() {
+      const row = await this.staffRow();
+      return row.role === "owner" || !!row.can_price;
     },
     bidder: () => sessionUser(env.DB, "bidder", jar[BIDDER_COOKIE]),
     base: () => (env.AZ_PUBLIC_URL || url.origin).replace(/\/$/, ""),
@@ -382,7 +396,7 @@ on("POST", "/api/staff/login", async c => {
   await c.limit("staff-login", 8, 900);
   const b = await body(c.request);
   const row = await c.db.prepare("SELECT * FROM staff WHERE username = ?").bind(String(b.username || "").trim()).first();
-  if (!row || !(await verifyPassword(String(b.password || ""), row.password_hash))) fail(401, "Username or password is incorrect.");
+  if (!row || row.revoked_at || !(await verifyPassword(String(b.password || ""), row.password_hash))) fail(401, "Username or password is incorrect.");
   c.extraHeaders.push(["set-cookie", setCookie(STAFF_COOKIE, await createSession(c.db, "staff", row.id), "staff", c.secure)]);
   return json({ username: row.username });
 });
@@ -394,8 +408,84 @@ on("POST", "/api/staff/logout", async c => {
 });
 
 on("GET", "/api/staff/me", async c => {
-  const row = await c.db.prepare("SELECT username FROM staff WHERE id = ?").bind(await c.staff()).first();
-  return json({ username: row.username });
+  const row = await c.staffRow();
+  return json({ username: row.username, name: row.display_name || row.username, role: row.role, can_price: await c.canPrice() });
+});
+
+// ---------------------------------------------------------------- employees and sign-in slips
+// Gary adds an employee and prints a slip with a one-time sign-in link (as a QR code).
+// The link works once, within 24 hours; the employee's device then stays signed in for
+// 30 days unless Gary removes them. Only a hash of each link is stored.
+const SLIP_HOURS = 24, EMPLOYEE_SESSION_H = 30 * 24;
+const employeeView = r => ({ id: r.id, name: r.display_name, can_price: !!r.can_price, active: !r.revoked_at,
+  created_at: r.created_at, removed_at: r.revoked_at, last_slip_at: r.last_slip_at || null, slip_used_at: r.slip_used_at || null });
+const EMPLOYEE_SQL = "SELECT s.*, (SELECT MAX(created_at) FROM staff_links WHERE staff_id = s.id) AS last_slip_at, " +
+  "(SELECT MAX(used_at) FROM staff_links WHERE staff_id = s.id) AS slip_used_at FROM staff s WHERE s.role = 'employee'";
+
+on("GET", "/api/staff/employees", async c => {
+  await c.owner();
+  const { results } = await c.db.prepare(EMPLOYEE_SQL + " ORDER BY s.revoked_at IS NOT NULL, s.display_name").all();
+  return json(results.map(employeeView));
+});
+
+on("POST", "/api/staff/employees", async c => {
+  await c.owner();
+  const b = await body(c.request);
+  const name = str(b.name, 60, "Please enter the employee's name (2-60 characters).", 2);
+  if (await c.db.prepare("SELECT 1 FROM staff WHERE role = 'employee' AND revoked_at IS NULL AND lower(display_name) = lower(?)").bind(name).first())
+    fail(409, "There is already an employee with that name. Print them a new slip instead.");
+  const r = await c.db.prepare("INSERT INTO staff (username, password_hash, created_at, role, display_name, can_price) VALUES (?, '!', ?, 'employee', ?, ?)")
+    .bind(`employee-${randomHex(6)}`, iso(), name, b.can_price ? 1 : 0).run();
+  return json(employeeView(await c.db.prepare(EMPLOYEE_SQL + " AND s.id = ?").bind(r.meta.last_row_id).first()), 201);
+});
+
+on("PATCH", "/api/staff/employees/:id", async (c, p) => {
+  await c.owner();
+  const b = await body(c.request);
+  if (b.can_price == null) fail(400, "Nothing to change.");
+  const r = await c.db.prepare("UPDATE staff SET can_price = ? WHERE id = ? AND role = 'employee'").bind(b.can_price ? 1 : 0, p.id).run();
+  if (!r.meta.changes) fail(404, "No such employee.");
+  return json(employeeView(await c.db.prepare(EMPLOYEE_SQL + " AND s.id = ?").bind(p.id).first()));
+});
+
+on("POST", "/api/staff/employees/:id/slip", async (c, p) => {
+  await c.owner();
+  const row = await c.db.prepare("SELECT * FROM staff WHERE id = ? AND role = 'employee' AND revoked_at IS NULL").bind(p.id).first();
+  if (!row) fail(404, "No such employee.");
+  const token = randomHex(32), now = new Date(), expires = iso(addHours(now, SLIP_HOURS));
+  await c.db.batch([
+    // a new slip cancels any earlier slip that was not used yet
+    c.db.prepare("DELETE FROM staff_links WHERE staff_id = ? AND used_at IS NULL").bind(row.id),
+    c.db.prepare("INSERT INTO staff_links (token_hash, staff_id, created_at, expires_at) VALUES (?, ?, ?, ?)").bind(await sha256Hex(token), row.id, iso(now), expires),
+  ]);
+  return json({ name: row.display_name, url: `${c.base()}/signin#t=${token}`, expires_at: expires }, 201);
+});
+
+on("POST", "/api/staff/employees/:id/remove", async (c, p) => {
+  await c.owner();
+  const r = await c.db.prepare("UPDATE staff SET revoked_at = ? WHERE id = ? AND role = 'employee' AND revoked_at IS NULL").bind(iso(), p.id).run();
+  if (!r.meta.changes) fail(404, "No such employee.");
+  await c.db.batch([
+    c.db.prepare("DELETE FROM sessions WHERE kind = 'staff' AND user_id = ?").bind(p.id),
+    c.db.prepare("DELETE FROM staff_links WHERE staff_id = ? AND used_at IS NULL").bind(p.id),
+  ]);
+  return json({ ok: true });
+});
+
+on("POST", "/api/staff/link", async c => {
+  await c.limit("staff-link", 10, 900);
+  const b = await body(c.request);
+  const token = String(b.token || "");
+  const bad = "This sign-in slip has expired or was already used. Ask Gary for a new one.";
+  if (!/^[0-9a-f]{64}$/.test(token)) fail(400, bad);
+  const hash = await sha256Hex(token), now = iso();
+  const used = await c.db.prepare("UPDATE staff_links SET used_at = ? WHERE token_hash = ? AND used_at IS NULL AND expires_at > ?").bind(now, hash, now).run();
+  if (!used.meta.changes) fail(401, bad);
+  const row = await c.db.prepare("SELECT s.* FROM staff s JOIN staff_links l ON l.staff_id = s.id WHERE l.token_hash = ?").bind(hash).first();
+  if (!row || row.revoked_at || row.role !== "employee") fail(401, bad);
+  const session = await createSession(c.db, "staff", row.id, EMPLOYEE_SESSION_H);
+  c.extraHeaders.push(["set-cookie", setCookie(STAFF_COOKIE, session, "staff", c.secure, EMPLOYEE_SESSION_H)]);
+  return json({ name: row.display_name });
 });
 
 on("GET", "/api/staff/summary", async c => {
@@ -444,7 +534,7 @@ on("POST", "/api/staff/items", async c => {
   // A price Gary types is his price: it is locked, so Pledge's dynamic price does not replace it.
   // 0 means "ask in store" and leaves the item open to the dynamic price.
   const r = await c.db.prepare("INSERT INTO items (sku, name, category, price_cents, price_locked, condition, description, badge, image, ship, status, available_on, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-    .bind(sku, name, category, cents(price), cents(price) > 0 ? 1 : 0, condition, description, badge, image, flag(form.get("ship")) ? 1 : 0,
+    .bind(sku, name, category, cents(price), cents(price) > 0 && (await c.canPrice()) ? 1 : 0, condition, description, badge, image, flag(form.get("ship")) ? 1 : 0,
       flag(form.get("publish")) ? "live" : "draft", availableOn || null, stamp, stamp).run();
   return json(staffItemView(await c.db.prepare("SELECT * FROM items WHERE id = ?").bind(r.meta.last_row_id).first()), 201);
 });
@@ -462,6 +552,7 @@ on("PATCH", "/api/staff/items/:id", async (c, p) => {
   if (b.description != null) ch.description = str(b.description, 4000, "The description is too long.");
   if (b.badge != null) ch.badge = str(b.badge, 30, "The badge is too long.");
   if (b.status != null) { if (!["draft", "live", "reserved", "sold", "hidden"].includes(b.status)) fail(400, "Unknown status."); ch.status = b.status; }
+  if ((b.price != null || b.locked != null) && !(await c.canPrice())) fail(403, "Ask Gary to change prices or locks.");
   if (b.price != null) { ch.price_cents = cents(num(b.price, { ge: 0, le: 1_000_000 }, "Please check the price.")); ch.price_locked = 1; }
   if (b.locked != null) ch.price_locked = b.locked ? 1 : 0;
   if (b.pledge_item != null) ch.pledge_item = str(b.pledge_item, 40, "Please check the Pledge item number.") || null;
@@ -750,6 +841,7 @@ export default {
     await settleDue(env.DB);
     await env.DB.prepare("DELETE FROM throttle WHERE at < ?").bind(Date.now() - 24 * 3600e3).run();
     await env.DB.prepare("DELETE FROM sessions WHERE expires_at <= ?").bind(iso()).run();
+    await env.DB.prepare("DELETE FROM staff_links WHERE expires_at < ?").bind(iso(addHours(new Date(), -24 * 30))).run();
     await env.DB.prepare("DELETE FROM feed_log WHERE at < ?").bind(iso(addHours(new Date(), -24 * 7))).run();
   },
 };
