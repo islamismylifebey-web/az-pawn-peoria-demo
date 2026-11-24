@@ -124,6 +124,9 @@ function renderMeetings(){
  document.querySelectorAll("[data-meet]").forEach(b=>b.onclick=()=>{const m=state.inquiries.find(x=>x.id===+b.dataset.meet);$("#meetCustomer").value=m.name;$("#meetLink").focus()});
 }
 
+// Locked = Gary's own price, always shown. Market = Pledge's dynamic price. Set = the price typed here, used until Pledge sends one.
+const PRICE_LABEL={locked:"Locked",dynamic:"Market price from Pledge",set:"Set here"};
+const priceCell=i=>`${i.price_cents?money(i.price_cents):"Ask for price"}<small>${PRICE_LABEL[i.price_source]||""}${i.price_source!=="dynamic"&&i.dynamic_cents!=null?` · market ${money(i.dynamic_cents)}`:""}</small>`;
 const STATUS_LABEL={draft:"Draft",live:"In store",auction:"On auction",reserved:"Reserved",sold:"Sold",hidden:"Hidden"};
 function renderInventory(){
  const q=$("#inventorySearch").value.toLowerCase();
@@ -132,9 +135,9 @@ function renderInventory(){
   const actions=[];
   if(i.status==="draft"||i.status==="hidden")actions.push(`<button data-item="${i.id}" data-set="live">Publish</button>`);
   if(i.status==="live")actions.push(`<button data-item="${i.id}" data-set="sold">Sold in store</button>`,`<button class="secondary" data-item="${i.id}" data-set="hidden">Hide</button>`,`<button class="secondary" data-auction-item="${i.id}">Auction</button>`);
-  if(i.status!=="auction"&&i.status!=="sold")actions.push(`<button class="secondary" data-price="${i.id}">Price</button>`);
+  if(i.status!=="auction"&&i.status!=="sold")actions.push(`<button class="secondary" data-price="${i.id}">Price</button>`,`<button class="secondary" data-lock="${i.id}">${i.price_locked?"Unlock price":"Lock price"}</button>`);
   const aging=i.status==="live"&&ageDays(i.created_at)>85;
-  return `<tr><td><strong>${esc(i.sku)}</strong></td><td>${esc(i.name)}${i.available_on?`<small>for sale from ${esc(i.available_on)}</small>`:""}</td><td>${money(i.price_cents)}</td><td>${ageDays(i.created_at)} days${aging?' <span class="status maroon">aging</span>':""}</td><td><span class="status">${STATUS_LABEL[i.status]||esc(i.status)}</span></td><td class="row-actions">${actions.join("")}</td></tr>`}).join("")||'<tr><td colspan="6" class="muted">No items yet. Add the first one above.</td></tr>';
+  return `<tr><td><strong>${esc(i.sku)}</strong></td><td>${esc(i.name)}${i.available_on?`<small>for sale from ${esc(i.available_on)}</small>`:""}</td><td>${priceCell(i)}</td><td>${ageDays(i.created_at)} days${aging?' <span class="status maroon">aging</span>':""}</td><td><span class="status">${STATUS_LABEL[i.status]||esc(i.status)}</span></td><td class="row-actions">${actions.join("")}</td></tr>`}).join("")||'<tr><td colspan="6" class="muted">No items yet. Add the first one above.</td></tr>';
  document.querySelectorAll("[data-set]").forEach(b=>b.onclick=async()=>{
   if(!guard())return;
   const item=state.items.find(i=>i.id===+b.dataset.item);
@@ -143,9 +146,15 @@ function renderInventory(){
  document.querySelectorAll("[data-price]").forEach(b=>b.onclick=async()=>{
   if(!guard())return;
   const item=state.items.find(i=>i.id===+b.dataset.price);
-  const value=prompt(`New price for ${item.name} (USD)`,(item.price_cents/100).toFixed(2));if(value===null)return;
+  const value=prompt(`Your price for ${item.name} (USD). Saving locks it, so the market price won't change it.`,(item.price_cents/100).toFixed(2));if(value===null)return;
   const price=parseFloat(value);if(!(price>=0)){showToast("Enter a valid price");return}
-  try{await api(`/api/staff/items/${item.id}`,{method:"PATCH",json:{price}});showToast("Price updated");await refresh()}catch(err){showToast(err.message)}});
+  try{await api(`/api/staff/items/${item.id}`,{method:"PATCH",json:{price}});showToast("Price locked");await refresh()}catch(err){showToast(err.message)}});
+ document.querySelectorAll("[data-lock]").forEach(b=>b.onclick=async()=>{
+  if(!guard())return;
+  const item=state.items.find(i=>i.id===+b.dataset.lock);
+  const locked=!item.price_locked;
+  if(!locked&&!confirm(`Unlock ${item.name}? The store will show Pledge's market price when it has one.`))return;
+  try{await api(`/api/staff/items/${item.id}`,{method:"PATCH",json:{locked}});showToast(locked?"Price locked":"Price unlocked");await refresh()}catch(err){showToast(err.message)}});
  document.querySelectorAll("[data-auction-item]").forEach(b=>b.onclick=()=>{switchTab("auctions");$("#auctionItem").value=b.dataset.auctionItem;$("#auctionForm [name=start]").focus()});
  renderAuctionPicker();
 }

@@ -89,9 +89,20 @@ async function releaseHolds(env, auctionId, keepBidderId) {
 }
 
 // ------------------------------------------------------------------ views
-const itemView = r => ({ id: r.id, sku: r.sku, name: r.name, category: r.category, price_cents: r.price_cents,
+// The price a customer sees and pays. Gary's locked price always wins. Otherwise
+// Pledge's dynamic price (market, demand and season) is used while it is fresh,
+// and the price set in the Command Center is the fallback.
+const DYNAMIC_FRESH_MS = 14 * 24 * 3600e3;
+const dynamicFresh = r => r.dynamic_cents !== null && r.dynamic_cents !== undefined && r.dynamic_at &&
+  Date.now() - Date.parse(r.dynamic_at) <= DYNAMIC_FRESH_MS;
+const priceSource = r => (r.price_locked ? "locked" : dynamicFresh(r) ? "dynamic" : "set");
+const effectivePrice = r => (priceSource(r) === "dynamic" ? r.dynamic_cents : r.price_cents);
+const itemView = r => ({ id: r.id, sku: r.sku, name: r.name, category: r.category, price_cents: effectivePrice(r),
+  price_source: priceSource(r) === "dynamic" ? "market" : "shop", price_updated: priceSource(r) === "dynamic" ? r.dynamic_at : null,
   condition: r.condition, description: r.description, badge: r.badge, image: r.image, ship: !!r.ship });
-const staffItemView = r => ({ ...itemView(r), status: r.status, available_on: r.available_on, created_at: r.created_at });
+const staffItemView = r => ({ ...itemView(r), status: r.status, available_on: r.available_on, created_at: r.created_at,
+  price_source: priceSource(r), set_price_cents: r.price_cents, price_locked: !!r.price_locked,
+  dynamic_cents: r.dynamic_cents ?? null, dynamic_at: r.dynamic_at ?? null, dynamic_note: r.dynamic_note || "", pledge_item: r.pledge_item || "" });
 const cents = v => Math.round(Number(v) * 100);
 
 // ------------------------------------------------------------------ input helpers
@@ -279,12 +290,12 @@ on("POST", "/api/orders", async c => {
   const open = r => r && r.status === "live" && (r.available_on === null || r.available_on <= today);
   if (ids.some(i => !open(found[i]))) fail(409, "Some items in your cart were just sold or reserved. Please refresh.");
   if (fulfillment === "ship" && ids.some(i => !found[i].ship)) fail(400, "Some items are local pickup only.");
-  const total = ids.reduce((s, i) => s + found[i].price_cents, 0);
+  const total = ids.reduce((s, i) => s + effectivePrice(found[i]), 0);
   const stamp = iso();
   const stmts = [
     guard(c.db, `(SELECT COUNT(*) FROM items WHERE id IN (${marks}) AND status = 'live' AND (available_on IS NULL OR available_on <= ?)) = ?`, ...ids, today, ids.length),
     c.db.prepare("INSERT INTO orders (name, phone, email, fulfillment, notes, total_cents, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)").bind(name, phone, email, fulfillment, notes, total, stamp),
-    ...ids.map(i => c.db.prepare("INSERT INTO order_lines (order_id, item_id, name, price_cents) VALUES ((SELECT MAX(id) FROM orders), ?, ?, ?)").bind(i, found[i].name, found[i].price_cents)),
+    ...ids.map(i => c.db.prepare("INSERT INTO order_lines (order_id, item_id, name, price_cents) VALUES ((SELECT MAX(id) FROM orders), ?, ?, ?)").bind(i, found[i].name, effectivePrice(found[i]))),
     c.db.prepare(`UPDATE items SET status = 'reserved', updated_at = ? WHERE id IN (${marks})`).bind(stamp, ...ids),
     unguard(c.db),
     c.db.prepare("SELECT MAX(id) AS id FROM orders"),
@@ -430,8 +441,10 @@ on("POST", "/api/staff/items", async c => {
   const prefix = SKU_PREFIX[category] || "OTH";
   let count = (await c.db.prepare("SELECT COUNT(*) AS n FROM items").first()).n, sku;
   do { count += 1; sku = `AZ-${prefix}-${1000 + count}`; } while (await c.db.prepare("SELECT 1 FROM items WHERE sku = ?").bind(sku).first());
-  const r = await c.db.prepare("INSERT INTO items (sku, name, category, price_cents, condition, description, badge, image, ship, status, available_on, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-    .bind(sku, name, category, cents(price), condition, description, badge, image, flag(form.get("ship")) ? 1 : 0,
+  // A price Gary types is his price: it is locked, so Pledge's dynamic price does not replace it.
+  // 0 means "ask in store" and leaves the item open to the dynamic price.
+  const r = await c.db.prepare("INSERT INTO items (sku, name, category, price_cents, price_locked, condition, description, badge, image, ship, status, available_on, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+    .bind(sku, name, category, cents(price), cents(price) > 0 ? 1 : 0, condition, description, badge, image, flag(form.get("ship")) ? 1 : 0,
       flag(form.get("publish")) ? "live" : "draft", availableOn || null, stamp, stamp).run();
   return json(staffItemView(await c.db.prepare("SELECT * FROM items WHERE id = ?").bind(r.meta.last_row_id).first()), 201);
 });
@@ -449,7 +462,9 @@ on("PATCH", "/api/staff/items/:id", async (c, p) => {
   if (b.description != null) ch.description = str(b.description, 4000, "The description is too long.");
   if (b.badge != null) ch.badge = str(b.badge, 30, "The badge is too long.");
   if (b.status != null) { if (!["draft", "live", "reserved", "sold", "hidden"].includes(b.status)) fail(400, "Unknown status."); ch.status = b.status; }
-  if (b.price != null) ch.price_cents = cents(num(b.price, { ge: 0, le: 1_000_000 }, "Please check the price."));
+  if (b.price != null) { ch.price_cents = cents(num(b.price, { ge: 0, le: 1_000_000 }, "Please check the price.")); ch.price_locked = 1; }
+  if (b.locked != null) ch.price_locked = b.locked ? 1 : 0;
+  if (b.pledge_item != null) ch.pledge_item = str(b.pledge_item, 40, "Please check the Pledge item number.") || null;
   if (b.ship != null) ch.ship = b.ship ? 1 : 0;
   if ("available_on" in b) { if (b.available_on && !isDate(b.available_on)) fail(400, "Please check the hold date."); ch.available_on = b.available_on || null; }
   const keys = Object.keys(ch);
@@ -633,6 +648,71 @@ async function media(c, folder, name) {
   } });
 }
 
+// ---------------------------------------------------------------- Pledge price feed
+// Pledge (the shop's counter system) sends dynamic prices here. Items only:
+// no customer, ticket or loan data is accepted or stored. Signed exactly like
+// Pledge's market feed: X-Pledge-Signature = sha256=HMAC(secret, timestamp + "." + body).
+const FEED_MAX_BYTES = 1_000_000, FEED_MAX_ITEMS = 2000, FEED_SKEW_S = 300, FEED_MAX_CENTS = 10_000_000;
+const hex = buf => [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+function sameText(a, b) {
+  if (a.length !== b.length) return false;
+  let d = 0;
+  for (let i = 0; i < a.length; i++) d |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return d === 0;
+}
+async function feedSigned(c, raw) {
+  const secret = c.env.PLEDGE_FEED_SECRET;
+  if (!secret) fail(503, "The Pledge price feed is not set up yet.");
+  const ts = c.request.headers.get("x-pledge-timestamp") || "";
+  const sig = c.request.headers.get("x-pledge-signature") || "";
+  if (!/^\d{9,12}$/.test(ts) || Math.abs(Date.now() / 1000 - Number(ts)) > FEED_SKEW_S) fail(401, "Bad or old timestamp.");
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const msg = new Uint8Array([...new TextEncoder().encode(ts + "."), ...new Uint8Array(raw)]);
+  const want = "sha256=" + hex(await crypto.subtle.sign("HMAC", key, msg));
+  if (!sameText(want, sig)) fail(401, "Bad signature.");
+  return hex(await crypto.subtle.digest("SHA-256", raw));
+}
+
+on("POST", "/api/pledge/feed", async c => {
+  const raw = await c.request.arrayBuffer();
+  if (raw.byteLength > FEED_MAX_BYTES) fail(413, "Too big. Send at most 2000 items at a time.");
+  const digest = await feedSigned(c, raw);
+  let b;
+  try { b = JSON.parse(new TextDecoder().decode(raw)); } catch { fail(400, "Body must be JSON."); }
+  if (!b || typeof b !== "object") fail(400, "Body must be JSON.");
+  const items = Array.isArray(b.items) ? b.items : [];
+  if (items.length > FEED_MAX_ITEMS) fail(413, "Too many items. Send at most 2000 at a time.");
+  if (await c.db.prepare("SELECT 1 FROM feed_log WHERE digest = ?").bind(digest).first()) return json({ ok: true, duplicate: true });
+  const stamp = iso();
+  const at = typeof b.at === "string" && !Number.isNaN(Date.parse(b.at)) ? iso(new Date(Math.min(Date.parse(b.at), Date.now()))) : stamp;
+  const stmts = [], rejected = [];
+  for (const [n, it] of items.entries()) {
+    const sku = typeof it?.sku === "string" ? it.sku.trim().slice(0, 40) : "";
+    const pi = typeof it?.pledge_item === "string" || typeof it?.pledge_item === "number" ? String(it.pledge_item).trim().slice(0, 40) : "";
+    const v = it?.dynamic_cents;
+    const clear = v === null;
+    if ((!sku && !pi) || (!clear && !(Number.isInteger(v) && v >= 0 && v <= FEED_MAX_CENTS))) { rejected.push(n); continue; }
+    const note = typeof it.why === "string" ? it.why.trim().slice(0, 200) : "";
+    const where = sku ? "sku = ?" : "pledge_item = ?";
+    stmts.push(c.db.prepare(`UPDATE items SET dynamic_cents = ?, dynamic_at = ?, dynamic_note = ? WHERE ${where}`)
+      .bind(clear ? null : v, clear ? null : at, clear ? "" : note, sku || pi));
+  }
+  let matched = 0;
+  for (let i = 0; i < stmts.length; i += 100) {
+    const res = await c.db.batch(stmts.slice(i, i + 100));
+    matched += res.reduce((s, r) => s + (r.meta?.changes || 0), 0);
+  }
+  await c.db.prepare("INSERT INTO feed_log (digest, at, items, matched) VALUES (?, ?, ?, ?)").bind(digest, stamp, items.length, matched).run();
+  return json({ ok: true, received: items.length, matched, rejected });
+});
+
+on("GET", "/api/staff/feed", async c => {
+  await c.staff();
+  const { results } = await c.db.prepare("SELECT at, items, matched FROM feed_log ORDER BY at DESC LIMIT 20").all();
+  const { n } = await c.db.prepare("SELECT COUNT(*) AS n FROM items WHERE dynamic_cents IS NOT NULL").first();
+  return json({ set_up: !!c.env.PLEDGE_FEED_SECRET, items_with_dynamic: n, recent: results });
+});
+
 // ---------------------------------------------------------------- entry
 export default {
   async fetch(request, env, execCtx) {
@@ -642,7 +722,8 @@ export default {
       if (path.startsWith("/api/")) {
         // Every change must carry this header. A browser will not add it to a
         // cross-site request without a preflight this API never grants.
-        if (!["GET", "HEAD", "OPTIONS"].includes(request.method) && request.headers.get("x-az-request") !== "1") fail(403, "Missing request header.");
+        // The Pledge feed is the exception: it is a signed server-to-server call.
+        if (!["GET", "HEAD", "OPTIONS"].includes(request.method) && path !== "/api/pledge/feed" && request.headers.get("x-az-request") !== "1") fail(403, "Missing request header.");
         for (const [method, re, handler] of routes) {
           const m = path.match(re);
           if (m && method === request.method) {
@@ -669,5 +750,6 @@ export default {
     await settleDue(env.DB);
     await env.DB.prepare("DELETE FROM throttle WHERE at < ?").bind(Date.now() - 24 * 3600e3).run();
     await env.DB.prepare("DELETE FROM sessions WHERE expires_at <= ?").bind(iso()).run();
+    await env.DB.prepare("DELETE FROM feed_log WHERE at < ?").bind(iso(addHours(new Date(), -24 * 7))).run();
   },
 };

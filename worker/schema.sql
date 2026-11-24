@@ -9,6 +9,11 @@ CREATE TABLE IF NOT EXISTS items (
     name TEXT NOT NULL,
     category TEXT NOT NULL,
     price_cents INTEGER NOT NULL CHECK (price_cents >= 0),
+    price_locked INTEGER NOT NULL DEFAULT 0,      -- 1 = Gary's price, never replaced by the dynamic one
+    dynamic_cents INTEGER,                        -- Pledge's dynamic price (market, demand, season)
+    dynamic_at TEXT,
+    dynamic_note TEXT NOT NULL DEFAULT '',
+    pledge_item TEXT,                             -- Pledge item number, when the item is linked
     condition TEXT NOT NULL DEFAULT 'Good',
     description TEXT NOT NULL DEFAULT '',
     badge TEXT NOT NULL DEFAULT '',
@@ -139,3 +144,12 @@ CREATE TABLE IF NOT EXISTS throttle (
     at INTEGER NOT NULL
 );
 CREATE INDEX IF NOT EXISTS throttle_by_key ON throttle (key, at);
+
+-- Pledge price feed: one row per accepted push, so a replayed push is ignored.
+CREATE TABLE IF NOT EXISTS feed_log (
+    digest TEXT PRIMARY KEY,
+    at TEXT NOT NULL,
+    items INTEGER NOT NULL,
+    matched INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS items_pledge_item ON items (pledge_item);

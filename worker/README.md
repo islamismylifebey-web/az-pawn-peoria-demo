@@ -33,10 +33,15 @@ node tools/add-staff.mjs <username>                        # the owner types the
 Stripe card holds switch on when Gary's secret key is added:
 `npx wrangler secret put AZ_STRIPE_SECRET_KEY` (typed by the owner, never pasted into chat).
 
+## Pledge's dynamic prices
+
+Pledge sends its dynamic prices to `/api/pledge/feed`, and every item shows that
+price unless Gary locks his own. See `PLEDGE-PRICE-FEED.md`.
+
 ## Updates
 
 Edit files, then `npx wrangler deploy`. Prices and items are changed in the
-Command Center (`/owner.html`), not in code.
+Command Center (`/owner.html`), not in code. A price typed there is locked.
 
 ## Tests
 
