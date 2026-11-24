@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A-Z Jewelry & Swap · Peoria Jewelry, Lab-Grown Diamonds, Pawn & Auctions</title>
+<meta name="description" content="A-Z Jewelry & Swap, 414 SW Adams St, Peoria IL. Gold and diamond jewelry, lab-grown diamonds ordered to your size and budget, games, electronics, tools and instruments, fair pawn loans and the A-Z Auction Block.">
+<meta name="theme-color" content="#070605">
+<meta property="og:title" content="A-Z Jewelry & Swap · Peoria, Illinois">
+<meta property="og:description" content="Real gold. Real deals. Lab-grown diamonds and fine jewelry ordered for you, fair pawn loans and a live auction block.">
+<meta property="og:image" content="/inventory/hero.jpg">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="extras.css">
+<script defer src="https://analytics.galorweb.works/t.js" data-site="azpawn"></script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"JewelryStore","name":"A-Z Jewelry & Swap Inc.","telephone":"+1-309-637-4531",
+ "address":{"@type":"PostalAddress","streetAddress":"414 SW Adams St","addressLocality":"Peoria","addressRegion":"IL","postalCode":"61602","addressCountry":"US"},
+ "openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"09:00","closes":"17:00"},
+  {"@type":"OpeningHoursSpecification","dayOfWeek":"Saturday","opens":"09:00","closes":"15:00"}]}
+</script>
+</head>
+<body>
+<div class="demo-banner" id="demoBanner" hidden>Preview mode: browsing works, nothing is sent.</div>
+
+<header class="top" id="top">
+  <a class="brand" href="#/" aria-label="A-Z Jewelry and Swap home">
+    <span class="mark">A<span>–</span>Z</span>
+    <span class="brand-text">Jewelry &amp; Swap<small>Peoria, Illinois</small></span>
+  </a>
+  <form class="top-search" id="topSearch" role="search">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input name="q" type="search" placeholder="Search rings, chains, PS5, games…" aria-label="Search the store">
+  </form>
+  <div class="top-actions">
+    <button class="icon-btn" id="cartBtn" aria-label="Your hold list"><svg viewBox="0 0 24 24"><path d="M6 6h15l-1.5 9h-12z M6 6 5 3H2 M9 20a1 1 0 1 0 0-.01 M18 20a1 1 0 1 0 0-.01"/></svg><b id="cartCount">0</b></button>
+    <a class="btn btn-gold small hide-sm" href="tel:3096374531">Call (309) 637-4531</a>
+    <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+  </div>
+  <nav class="nav" id="nav">
+    <a href="#/shop">Shop all</a>
+    <span class="nav-depts" id="navDepts"></span>
+    <a href="#/custom" class="nav-custom">Diamonds to order</a>
+    <a href="#auction" class="nav-auction">Auction Block <i class="live-dot"></i></a>
+    <a href="#loans">Pawn Loans</a>
+    <a href="#sell">Sell to Us</a>
+    <a href="#visit">Visit</a>
+  </nav>
+</header>
+
+<main id="home">
+<section class="hero">
+  <div class="hero-media" id="heroMedia">
+    <picture><source srcset="inventory/hero.webp" type="image/webp"><img src="inventory/hero.jpg" alt="Diamond ring, gold chain, diamond studs and a gold watch on a black mirror surface" fetchpriority="high"></picture>
+  </div>
+  <canvas id="sparkle" aria-hidden="true"></canvas>
+  <div class="hero-streaks" aria-hidden="true"><i></i><i></i></div>
+  <div class="hero-copy">
+    <p class="eyebrow">414 SW Adams St · Peoria, Illinois</p>
+    <h1>Real gold.<br>Real deals.<br><em>Straight-up numbers.</em></h1>
+    <p class="lede">Diamonds, gold, games and electronics at pawn-shop prices. Lab-grown diamonds and fine jewelry ordered to your size and budget. Fair loans, no credit check. And a live auction block where you set the price.</p>
+    <div class="hero-cta">
+      <a class="btn btn-gold" href="#/shop">Shop the store</a>
+      <a class="btn btn-ghost" href="#/custom">Order a diamond</a>
+    </div>
+  </div>
+</section>
+
+<section class="trust" aria-label="Why A-Z">
+  <div><b id="statItems">200+</b><span>pieces on the shelf</span></div>
+  <div><b>Any shape</b><span>lab-grown diamonds to order</span></div>
+  <div><b>No</b><span>credit check loans</span></div>
+  <div><b>Same day</b><span>cash for gold</span></div>
+</section>
+
+<section class="section" id="departments">
+  <div class="section-head">
+    <p class="eyebrow">Shop by department</p>
+    <h2>What are you <em>looking for?</em></h2>
+  </div>
+  <div class="dept-grid" id="deptGrid"></div>
+</section>
+
+<section class="section featured">
+  <div class="section-head row">
+    <div><p class="eyebrow">In the case this week</p><h2>Featured pieces</h2></div>
+    <a class="link-arrow" href="#/shop/jewelry">See all jewelry →</a>
+  </div>
+  <div class="rail" id="featuredRail"></div>
+</section>
+
+<section class="section custom-band" id="custom">
+  <div class="section-head">
+    <p class="eyebrow">Fine jewelry, ordered for you</p>
+    <h2>Lab-grown diamonds. <em>Any shape, any size, any budget.</em></h2>
+    <p>What's in our case is only the start. A-Z orders engagement rings, wedding bands, earrings, bracelets, chains and loose lab-grown diamonds through our jewelry supplier. Tell us what you want and we'll come back with options and a straight price.</p>
+  </div>
+  <div class="custom-grid" id="customGrid"></div>
+  <div class="custom-steps">
+    <div><b>1</b><span>Tell us the piece, the metal, the stone and your budget</span></div>
+    <div><b>2</b><span>We call you with options and a price. No surprises</span></div>
+    <div><b>3</b><span>We order it, size it and you pick it up at the shop</span></div>
+  </div>
+  <div class="hero-cta center"><button class="btn btn-gold" data-custom="">Start a custom order</button><a class="btn btn-ghost" href="tel:3096374531">Or call (309) 637-4531</a></div>
+</section>
+
+<section class="section auction" id="auction">
+  <div class="section-head">
+    <p class="eyebrow"><i class="live-dot"></i> Live now</p>
+    <h2>The A–Z <em>Auction Block</em></h2>
+    <p>Bid from your phone. The high bid updates for everyone, and a last-second bid adds two minutes so nobody gets sniped.</p>
+  </div>
+  <div class="how">
+    <div><b>1</b><span>Make a free bidder account</span></div>
+    <div><b>2</b><span>Place a card hold of 10% of the item's estimate ($10 minimum). A hold, not a charge.</span></div>
+    <div><b>3</b><span>Bid. Don't win? The hold drops off. Win? Pay online or in the store.</span></div>
+  </div>
+  <div class="auction-grid" id="auctionGrid"></div>
+  <p class="fine">Winners have 48 hours to pay. A winner who doesn't pay forfeits the hold and loses bidding privileges.</p>
+</section>
+
+<section class="section loans" id="loans">
+  <div class="loan-card">
+    <div class="loan-copy">
+      <p class="eyebrow">Pawn loans</p>
+      <h2>How much <em>do you need?</em></h2>
+      <p>That's the first thing we'll ask. Bring in gold, jewelry, electronics, tools, instruments or games and walk out with cash the same visit. No credit check, no judgment, a fair number and a straight answer.</p>
+      <ul class="ticks">
+        <li>Loans with a printed contract</li>
+        <li>Extend or pay off any time in the store</li>
+        <li>Your item stays safe until you pick it up</li>
+      </ul>
+      <div class="hero-cta">
+        <a class="btn btn-gold" href="#sell" data-kind="pawn">Get a loan quote</a>
+        <a class="btn btn-ghost" href="tel:3096374531">Call the shop</a>
+      </div>
+    </div>
+    <div class="loan-art" aria-hidden="true"><picture><source srcset="inventory/hero.webp" type="image/webp"><img src="inventory/hero.jpg" alt=""></picture></div>
+  </div>
+</section>
+
+<section class="section" id="sell">
+  <div class="section-head">
+    <p class="eyebrow">Sell or pawn</p>
+    <h2>Send a photo, <em>get a number</em></h2>
+    <p>Tell us what you've got and the shop will get back to you with an offer.</p>
+  </div>
+  <form class="quote" id="quoteForm">
+    <div class="seg" role="radiogroup">
+      <label><input type="radio" name="kind" value="sell" checked><span>Sell it</span></label>
+      <label><input type="radio" name="kind" value="pawn"><span>Pawn it</span></label>
+    </div>
+    <div class="row2">
+      <label>Your name<input name="name" required maxlength="80"></label>
+      <label>Phone<input name="phone" required maxlength="30" inputmode="tel"></label>
+    </div>
+    <label>What is it?<input name="item" required maxlength="160" placeholder="14k gold chain, PS5, DeWalt drill set, guitar…"></label>
+    <label>Condition and details<textarea name="notes" rows="3" maxlength="1000"></textarea></label>
+    <label class="file">Photos (up to 6)<input type="file" name="photos" accept="image/*" multiple></label>
+    <button class="btn btn-gold" type="submit">Send for a quote</button>
+    <p class="form-msg" id="quoteMsg" role="status"></p>
+  </form>
+</section>
+
+<section class="section visit" id="visit">
+  <div class="visit-grid">
+    <div>
+      <p class="eyebrow">Visit the shop</p>
+      <h2>414 SW Adams St<br><em>Peoria, IL 61602</em></h2>
+      <table class="hours">
+        <tr><td>Monday – Friday</td><td>9 AM – 5 PM</td></tr>
+        <tr><td>Saturday</td><td>9 AM – 3 PM</td></tr>
+        <tr><td>Sunday</td><td>Closed</td></tr>
+      </table>
+      <div class="hero-cta">
+        <a class="btn btn-gold" href="https://maps.google.com/?q=414+SW+Adams+St+Peoria+IL+61602" target="_blank" rel="noopener">Get directions</a>
+        <a class="btn btn-ghost" href="tel:3096374531">(309) 637-4531</a>
+      </div>
+    </div>
+    <iframe class="map" title="Map to A-Z Jewelry and Swap" loading="lazy" src="https://www.google.com/maps?q=414+SW+Adams+St+Peoria+IL+61602&output=embed"></iframe>
+  </div>
+</section>
+</main>
+
+<!-- department / search page -->
+<main id="shopView" class="shop-view" hidden>
+  <nav class="crumbs" id="crumbs"></nav>
+  <div class="shop-head">
+    <div><h1 id="shopTitle">Shop</h1><p id="shopCount"></p></div>
+    <div class="shop-controls">
+      <input id="shopSearch" type="search" placeholder="Search this department" aria-label="Search this department">
+      <select id="sort" aria-label="Sort">
+        <option value="featured">Featured</option>
+        <option value="low">Price: low to high</option>
+        <option value="high">Price: high to low</option>
+        <option value="name">Name A–Z</option>
+      </select>
+    </div>
+  </div>
+  <div class="shop-body">
+    <aside class="side" id="side"></aside>
+    <div>
+      <div class="dept-intro" id="deptIntro" hidden></div>
+      <div class="grid" id="grid"></div>
+      <nav class="pager" id="pager" aria-label="Pages"></nav>
+    </div>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="brand"><span class="mark">A<span>–</span>Z</span><span class="brand-text">Jewelry &amp; Swap Inc.</span></div>
+  <p>Fair numbers. Straight answers. 414 SW Adams St, Peoria, IL · (309) 637-4531</p>
+  <p class="credit">Site by GALOR WebWorks · <a href="owner.html">Staff</a></p>
+</footer>
+
+<dialog class="modal" id="itemModal"><button class="x" data-close aria-label="Close">×</button><div class="item-detail" id="itemDetail"></div></dialog>
+<dialog class="modal" id="bidModal"><button class="x" data-close aria-label="Close">×</button><div id="bidBody"></div></dialog>
+<dialog class="modal" id="cartModal"><button class="x" data-close aria-label="Close">×</button><div id="cartBody"></div></dialog>
+<dialog class="modal" id="customModal"><button class="x" data-close aria-label="Close">×</button>
+  <form id="customForm" class="custom-form">
+    <p class="eyebrow">Custom order</p>
+    <h3>Tell us what you want</h3>
+    <p class="muted-note">No payment online. The shop calls you with options and a price.</p>
+    <div class="row2">
+      <label>Piece<select name="piece" id="customPiece">
+        <option>Engagement ring</option><option>Wedding band</option><option>Earrings</option><option>Bracelet</option>
+        <option>Necklace or pendant</option><option>Loose lab-grown diamond</option><option>Something else</option></select></label>
+      <label>Metal<select name="metal"><option>Yellow gold</option><option>White gold</option><option>Rose gold</option><option>Platinum</option><option>Sterling silver</option><option>Not sure yet</option></select></label>
+    </div>
+    <div class="row2">
+      <label>Stone<select name="stone"><option>Lab-grown diamond</option><option>Natural diamond</option><option>Colored gemstone</option><option>No stone</option><option>Not sure yet</option></select></label>
+      <label>Shape<select name="shape"><option>Round</option><option>Oval</option><option>Princess</option><option>Cushion</option><option>Emerald</option><option>Pear</option><option>Marquise</option><option>Radiant</option><option>Heart</option><option>Not sure yet</option></select></label>
+    </div>
+    <div class="row2">
+      <label>Size (carat, ring size, length)<input name="size" maxlength="60" placeholder="1 ct, size 7, 20 inch…"></label>
+      <label>Budget<input name="budget" maxlength="40" placeholder="Around $1,500"></label>
+    </div>
+    <label>Anything else?<textarea name="extra" rows="2" maxlength="800" placeholder="Style, when you need it, who it's for…"></textarea></label>
+    <label class="file">Inspiration photos (optional, up to 6)<input type="file" name="photos" accept="image/*" multiple></label>
+    <div class="row2">
+      <label>Your name<input name="name" required maxlength="80"></label>
+      <label>Phone<input name="phone" required maxlength="30" inputmode="tel"></label>
+    </div>
+    <label>Email (optional)<input name="email" type="email" maxlength="200"></label>
+    <button class="btn btn-gold" type="submit">Send my request</button>
+    <p class="form-msg" id="customMsg" role="status"></p>
+  </form>
+</dialog>
+<div class="toast" id="toast" role="status"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

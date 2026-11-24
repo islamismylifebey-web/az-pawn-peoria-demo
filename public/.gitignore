@@ -1,0 +1,4 @@
+# Pulled from the running store by worker/tools/pull-current-store.mjs at deploy time
+media/
+inventory/
+styles.css

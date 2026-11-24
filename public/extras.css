@@ -1,0 +1,54 @@
+/* A-Z Jewelry & Swap: custom-order jewelry, new departments and request forms.
+   Uses the colors and type set in styles.css. Built by GALOR WebWorks. */
+.art{width:100%;height:100%;filter:drop-shadow(0 0 18px rgba(242,185,73,.35))}
+.art-wrap{display:grid;place-items:center;width:84px;height:84px;border-radius:50%;
+  background:radial-gradient(circle at 50% 40%,rgba(255,214,130,.16),rgba(255,214,130,0) 70%);border:1px solid var(--line)}
+.dept-art{display:flex;flex-direction:column;justify-content:space-between}
+.dept-art .art-wrap{width:120px;height:120px;margin:22px auto 8px;padding:18px}
+.nav-custom{color:var(--gold2)!important}
+
+.custom-band{position:relative}
+.custom-band::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(60% 50% at 50% 0,rgba(242,185,73,.10),transparent 70%)}
+.custom-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;margin-top:28px;perspective:900px}
+.ctile{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:26px 16px 20px;cursor:pointer;
+  background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:var(--r);color:var(--ink);
+  transition:transform .35s cubic-bezier(.2,.7,.2,1),border-color .25s,box-shadow .25s;transform-style:preserve-3d}
+.ctile:hover,.ctile:focus-visible{border-color:var(--line2);box-shadow:0 24px 48px -24px rgba(242,185,73,.45);outline:none}
+.ctile .art-wrap{width:96px;height:96px;padding:14px;margin-bottom:6px}
+.ctile b{font:600 22px/1.1 var(--serif)}
+.ctile small{color:var(--mute);font-size:13px;line-height:1.4}
+.ctile em{font-style:normal;color:var(--gold);font-size:13px;font-weight:600;margin-top:auto}
+.custom-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:30px 0 24px}
+.custom-steps div{display:flex;gap:12px;align-items:flex-start;padding:16px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.02)}
+.custom-steps b{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--goldgrad);color:#1c1204;font-size:14px}
+.custom-steps span{color:var(--mute);font-size:14px}
+.hero-cta.center{justify-content:center}
+
+.custom-form{display:grid;gap:12px;min-width:min(560px,86vw)}
+.custom-form h3{font:600 30px/1.1 var(--serif)}
+.custom-form label{display:grid;gap:6px;font-size:13px;color:var(--mute)}
+.custom-form input,.custom-form select,.custom-form textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;padding:11px 12px;color:var(--ink)}
+.custom-form select option{background:#14100a}
+.custom-form .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.muted-note{color:var(--mute);font-size:14px}
+
+.dept-intro{margin-bottom:20px}
+.intro-band{display:flex;align-items:center;gap:18px;padding:18px 22px;border:1px solid var(--line2);border-radius:var(--r);
+  background:linear-gradient(110deg,rgba(242,185,73,.10),rgba(242,185,73,.02))}
+.intro-band h3{font:600 24px/1.15 var(--serif)}
+.intro-band p{color:var(--mute);font-size:14px}
+.intro-band>div{flex:1}
+.intro-band .art-wrap{flex:none;width:64px;height:64px;padding:10px}
+.wanted{grid-column:1/-1;max-width:620px}
+.wanted h3{font:600 28px/1.1 var(--serif)}
+.wanted p{color:var(--mute)}
+
+@media (max-width:640px){
+  .custom-form .row2{grid-template-columns:1fr}
+  .intro-band{flex-direction:column;align-items:flex-start}
+  .custom-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .ctile{padding:18px 10px 14px}
+  .ctile b{font-size:19px}
+}
+@media (prefers-reduced-motion:reduce){.ctile{transition:none}}
