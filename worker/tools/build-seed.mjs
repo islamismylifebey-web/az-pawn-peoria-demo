@@ -1,8 +1,8 @@
 // Builds seed.sql (the store's items) from an inventory.json file.
-// Usage: node tools/build-seed.mjs ../public/inventory/inventory.json > seed.sql
+// Usage: node tools/build-seed.mjs ../public/inventory/inventory.json seed.sql
 // Prices are copied exactly as they are in the file (0 shows "Ask for price").
 // Existing items are kept; only items not yet in the database are added.
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 
 const items = JSON.parse(readFileSync(process.argv[2], "utf8"));
 const q = v => (v === null || v === undefined ? "NULL" : typeof v === "number" ? String(v) : `'${String(v).replace(/'/g, "''")}'`);
@@ -14,4 +14,5 @@ for (const i of items) {
   const row = [i.id, i.sku, i.name, i.category, cents, i.condition || "Pre-owned", i.description || "", i.badge || "", image, i.ship ? 1 : 0, "live", null, now, now];
   lines.push(`INSERT OR IGNORE INTO items (id, sku, name, category, price_cents, condition, description, badge, image, ship, status, available_on, created_at, updated_at) VALUES (${row.map(q).join(", ")});`);
 }
-process.stdout.write(lines.join("\n") + "\n");
+const sql = lines.join("\n") + "\n";
+if (process.argv[3]) writeFileSync(process.argv[3], sql, "utf8"); else process.stdout.write(sql);

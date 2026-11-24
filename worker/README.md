@@ -24,7 +24,7 @@ node tools/pull-current-store.mjs http://100.88.0.9:8080   # stylesheet, hero, i
 npx wrangler d1 create az-jewelry-store                    # put the id it prints into wrangler.jsonc
 npx wrangler r2 bucket create az-jewelry-store-media
 npx wrangler d1 execute az-jewelry-store --remote --file schema.sql
-node tools/build-seed.mjs ../public/inventory/inventory.json > seed.sql
+node tools/build-seed.mjs ../public/inventory/inventory.json seed.sql
 npx wrangler d1 execute az-jewelry-store --remote --file seed.sql
 npx wrangler deploy
 node tools/add-staff.mjs <username>                        # the owner types the password; only a hash is stored
