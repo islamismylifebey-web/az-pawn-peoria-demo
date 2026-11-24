@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "compatibility_date": "2026-11-01",
   "workers_dev": true,
-  "routes": [{ "pattern": "azpawn.galorweb.works", "custom_domain": true }],
+  "routes": [{ "pattern": "azpawn.galorweb.works/*", "zone_name": "galorweb.works" }],
   "assets": { "directory": "../public", "binding": "ASSETS", "html_handling": "auto-trailing-slash", "not_found_handling": "none" },
   "d1_databases": [{ "binding": "DB", "database_name": "az-jewelry-store", "database_id": "cbc1799e-1104-4d22-b022-186217e4acc7" }],
   "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "az-jewelry-store-media" }],
