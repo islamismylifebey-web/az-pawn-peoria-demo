@@ -1,0 +1,12 @@
+{
+  "name": "az-jewelry-store",
+  "private": true,
+  "type": "module",
+  "description": "A-Z Jewelry & Swap store on Cloudflare Workers. Copyright GALOR WebWorks.",
+  "scripts": {
+    "dev": "wrangler dev",
+    "test": "node --test test/",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": { "wrangler": "4.168.0" }
+}

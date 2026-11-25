@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="referrer" content="no-referrer" />
+  <title>A-Z Staff sign in</title>
+  <link rel="stylesheet" href="owner.css" />
+</head>
+<body>
+  <!-- Opened from the QR code on a printed sign-in slip. Built by GALOR WebWorks for A-Z Jewelry & Swap Inc. -->
+  <section class="login-screen">
+    <div class="login-card">
+      <div class="brand"><div class="mark">A–Z</div><div><strong>A-Z Jewelry &amp; Swap</strong><span>Staff sign in</span></div></div>
+      <p id="msg">Signing you in…</p>
+      <a class="store-link" href="owner.html" id="go" hidden>Open the Command Center</a>
+    </div>
+  </section>
+  <script>
+  (async function () {
+    var msg = document.getElementById("msg");
+    var m = location.hash.match(/t=([0-9a-f]{64})/);
+    // take the one-time code out of the address bar and history right away
+    history.replaceState(null, "", location.pathname);
+    if (!m) { msg.textContent = "This sign-in slip has expired or was already used. Ask Gary for a new one."; return; }
+    try {
+      var r = await fetch("/api/staff/link", { method: "POST", credentials: "same-origin",
+        headers: { "content-type": "application/json", "x-az-request": "1" }, body: JSON.stringify({ token: m[1] }) });
+      var d = await r.json().catch(function () { return {}; });
+      if (!r.ok) { msg.textContent = d.detail || "That didn't work. Ask Gary for a new slip."; return; }
+      msg.textContent = "Welcome, " + d.name + ". You're signed in on this device.";
+      document.getElementById("go").hidden = false;
+      setTimeout(function () { location.replace("owner.html"); }, 1200);
+    } catch (e) { msg.textContent = "No connection. Check the internet and scan the slip again."; }
+  })();
+  </script>
+</body>
+</html>
