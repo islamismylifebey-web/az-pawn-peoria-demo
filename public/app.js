@@ -177,6 +177,7 @@ function route() {
   const r = parseRoute();
   trk(r.view === "shop" ? "shop_view" : "home_view", { dept: r.dept || "", q: (r.q || "").slice(0, 60) });
   $("#nav").classList.remove("open");
+  document.querySelectorAll("dialog[open]").forEach(d => d.close()); // a page change closes any open form
   $$("#nav a").forEach(a => a.classList.toggle("on", r.view === "shop" && (a.dataset.dept === r.dept || (!r.dept && a.getAttribute("href") === "#/shop"))));
   if (r.view === "shop") {
     $("#home").hidden = true; $("#shopView").hidden = false;
@@ -192,8 +193,11 @@ function route() {
 addEventListener("hashchange", route);
 
 /* ---------------------------------------------------------------- shop page */
+// Rings whose shop photo still shows the case fabric or a tag go after the clean ones.
+const ROUGH_PHOTO = /^ring0(16|21|26|29|62|63|64|76|77|78|79|81)/;
 function featureRank(i) {
   const k = key(i);
+  if (ROUGH_PHOTO.test(k)) return 2;
   if (/^ring/.test(k)) return 0;
   if (/ps5|pslot|xsx|xone|slot|bike/.test(k)) return 1;
   if (/^brac|earr/.test(k)) return 2;
@@ -356,6 +360,11 @@ function lotStatus(a) {
 }
 function renderAuctions(prev = {}) {
   const grid = $("#auctionGrid");
+  // "Live now" and the red dots only while a lot is actually open for bids
+  const liveNow = state.auctions.some(a => a.status === "live");
+  document.body.classList.toggle("no-live", !liveNow);
+  const eb = $("#auctionEyebrow");
+  if (eb) eb.lastChild.textContent = liveNow ? " Live now" : state.auctions.length ? " Coming up" : " Opening soon";
   if (!state.auctions.length) { grid.innerHTML = `<p class="empty">New lots are being photographed. Check back soon, or call to ask what's coming up.</p>`; return; }
   grid.innerHTML = state.auctions.map(a => `
     <article class="lot" data-lot="${a.id}">
@@ -449,6 +458,8 @@ document.addEventListener("click", async e => {
 });
 $("#cartBtn").onclick = openCart;
 $("#menuBtn").onclick = () => $("#nav").classList.toggle("open");
+// nav-close: picking a link on a phone closes the menu
+$("#nav").addEventListener("click", e => { if (e.target.closest("a")) $("#nav").classList.remove("open"); });
 $("#topSearch").onsubmit = e => { e.preventDefault(); const q = e.target.q.value.trim(); location.hash = shopURL({ dept: "", aisle: "", q, p: 1 }); e.target.q.blur(); };
 let qTimer;
 $("#shopSearch").oninput = e => { clearTimeout(qTimer); qTimer = setTimeout(() => { const r = parseRoute(); history.replaceState(null, "", shopURL(r, { q: e.target.value.trim(), p: 1 })); renderShop(parseRoute()); }, 200); };

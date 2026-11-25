@@ -25,7 +25,7 @@
 .custom-steps span{color:var(--mute);font-size:14px}
 .hero-cta.center{justify-content:center}
 
-.custom-form{display:grid;gap:12px;min-width:min(560px,86vw)}
+.custom-form{display:grid;gap:12px;min-width:min(504px,calc(94vw - 56px))}
 .custom-form h3{font:600 30px/1.1 var(--serif)}
 .custom-form label{display:grid;gap:6px;font-size:13px;color:var(--mute)}
 .custom-form input,.custom-form select,.custom-form textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;padding:11px 12px;color:var(--ink)}
@@ -52,3 +52,13 @@
   .ctile b{font-size:19px}
 }
 @media (prefers-reduced-motion:reduce){.ctile{transition:none}}
+
+/* Nov 25 polish: no stray vertical scrollbar when a featured card lifts on hover */
+.rail{overflow-y:hidden;padding-top:8px}
+/* the red "live" dots show only while an auction is actually open */
+body.no-live .live-dot{display:none}
+/* phone menu: the header's blur made the slide-out menu fit inside the header bar, so it showed one link.
+   A solid header on small screens lets the menu use the whole screen height. */
+@media (max-width:980px){.top{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(7,6,5,.97)}}
+/* phone: the custom-order form fits the screen with no sideways scroll */
+@media (max-width:640px){.modal{padding:24px 18px}.custom-form{min-width:0;width:100%}}
